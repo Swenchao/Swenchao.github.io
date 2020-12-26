@@ -1,0 +1,1981 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="SparkSQL, BJUT BigData 文超 Swenchao 深度学习">
+    <meta name="baidu-site-verification" content>
+    <meta name="google-site-verification" content>
+    <meta name="360-site-verification" content>
+    <meta name="description" content="SparkSQLSpark SQL概述什么是Spark SQLSpark SQL是Spark用来处理结构化数据的一个模块，它提供了2个编程抽象：DataFrame和DataSet，并且作为分布式SQL查询引擎的作用（DataFrame当表来">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SparkSQL | BJUT-Swenchao</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    <style type="text/css">
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <span class="logo-span">BJUT-Swenchao</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <span>关于</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <div class="logo-name">BJUT-Swenchao</div>
+        <div class="logo-desc">
+            
+            北京工业大学 | 软件工程 | 大数据
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                关于
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Swenchao" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Swenchao" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        SparkSQL
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                        <a href="/tags/SparkSQL/" target="_blank">
+                            <span class="chip bg-color">SparkSQL</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                        <a href="/categories/大数据/" class="post-category" target="_blank">
+                            大数据
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-10-06
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                    文超
+                    
+                </div>
+
+                
+                
+                <div class="info-break-policy">
+                    <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    5.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    25 分
+                </div>
+                
+                
+
+                
+                <div id="busuanzi_container_page_pv" class="info-break-policy">
+                    <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                    <span id="busuanzi_value_page_pv"></span>
+                </div>
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="SparkSQL"><a href="#SparkSQL" class="headerlink" title="SparkSQL"></a>SparkSQL</h1><h2 id="Spark-SQL概述"><a href="#Spark-SQL概述" class="headerlink" title="Spark SQL概述"></a>Spark SQL概述</h2><h3 id="什么是Spark-SQL"><a href="#什么是Spark-SQL" class="headerlink" title="什么是Spark SQL"></a>什么是Spark SQL</h3><p>Spark SQL是Spark用来处理结构化数据的一个模块，它提供了2个编程抽象：DataFrame和DataSet，并且作为分布式SQL查询引擎的作用（DataFrame当表来用，DataSet当对象来用）。</p>
+<p><strong>注：</strong>本来spark是没有数据结构的（最多是一个k-v，但是没有什么确定的name age之类的）</p>
+<p>它是将Hive SQL转换成MapReduce然后提交到集群上执行，大大简化了编写MapReduc的程序的复杂性，由于MapReduce这种计算模型执行效率比较慢。所有Spark SQL的应运而生，它是将Spark SQL转换成RDD，然后提交到集群执行，执行效率非常快！</p>
+<h3 id="Spark-SQL的特点"><a href="#Spark-SQL的特点" class="headerlink" title="Spark SQL的特点"></a>Spark SQL的特点</h3><p>1）易整合</p>
+<p>2）统一的数据访问方式</p>
+<p>3）兼容Hive</p>
+<p>4）标准的数据连接</p>
+<h3 id="什么是DataFrame"><a href="#什么是DataFrame" class="headerlink" title="什么是DataFrame"></a>什么是DataFrame</h3><p>与RDD类似，DataFrame也是一个分布式数据容器。然而DataFrame更像传统数据库的二维表格，除了数据以外，还记录数据的结构信息，即schema。同时，与Hive类似，DataFrame也支持嵌套数据类型（struct、array和map）。从API易用性的角度上看，DataFrame API提供的是一套高层的关系操作，比函数式的RDD API要更加友好。</p>
+<p><img src="1-1.png" alt="DataFrame和RDD的区别"></p>
+<p>左侧的RDD[Person]虽然以Person为类型参数，但Spark框架本身不了解Person类的内部结构。而右侧的DataFrame却提供了详细的结构信息，使得Spark SQL可以清楚地知道该数据集中包含哪些列，每列的名称和类型各是什么。DataFrame是为数据提供了Schema的视图。可以把它当做数据库中的一张表来对待，DataFrame也是懒执行的。性能上比RDD要高，主要原因：</p>
+<p>优化的执行计划：查询计划通过Spark catalyst optimiser进行优化。</p>
+<pre class="line-numbers language-scala"><code class="language-scala">users<span class="token punctuation">.</span>join<span class="token punctuation">(</span>events<span class="token punctuation">,</span> users<span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> <span class="token operator">==</span><span class="token operator">=</span> events<span class="token punctuation">(</span><span class="token string">"uid"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>filter<span class="token punctuation">(</span>events<span class="token punctuation">(</span><span class="token string">"date"</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token string">"2020-10-04"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="1-2.png" alt></p>
+<p>其中第一幅为我们自己写RDD时，所写的，可以实现合并过滤功能，但是中间会有很多无用的shuffle过程大大降低了效率。后面两幅是逐渐的优化。</p>
+<p>图中构造了两个DataFrame，将它们join之后又做了一次filter操作。如果原封不动地执行这个执行计划，最终的执行效率是不高的。因为join是一个代价较大的操作，也可能会产生一个较大的数据集。如果我们能将filter下推到 join下方，先对DataFrame进行过滤，再join过滤后的较小的结果集，便可以有效缩短执行时间。而Spark SQL的查询优化器正是这样做的。简而言之，逻辑查询计划优化就是一个利用基于关系代数的等价变换，将高成本的操作替换为低成本操作的过程。 </p>
+<h3 id="什么是DataSet"><a href="#什么是DataSet" class="headerlink" title="什么是DataSet"></a>什么是DataSet</h3><p>1）是Dataframe API的一个扩展，是Spark最新的数据抽象。</p>
+<p>2）用户友好的API风格，既具有类型安全检查也具有Dataframe的查询优化特性。</p>
+<p>3）Dataset支持编解码器，当需要访问非堆上的数据时可以避免反序列化整个对象，提高了效率。</p>
+<p>4）样例类被用来在Dataset中定义数据的结构信息，样例类中每个属性的名称直接映射到DataSet中的字段名称。</p>
+<p>5） Dataframe是Dataset的特列，DataFrame=Dataset[Row] ，所以可以通过as方法将Dataframe转换为Dataset。Row是一个类型，跟Car、Person这些的类型一样，所有的表结构信息我都用Row来表示。</p>
+<p>6）DataSet是强类型的。比如可以有Dataset[Car]，Dataset[Person].</p>
+<p>7）DataFrame只是知道字段，但是不知道字段的类型，所以在执行这些操作的时候是没办法在编译的时候检查是否类型失败的，比如你可以对一个String进行减法操作，在执行的时候才报错，而DataSet不仅仅知道字段，而且知道字段类型，所以有更严格的错误检查。就跟JSON对象和类对象之间的类比。</p>
+<p><img src="2-1.png" alt="DataSet和DataFrame和RDD的关系"></p>
+<p>RDD加上了关系就成了 DataFrame，DataFrame加上了类和属性就成了DataSet</p>
+<h2 id="SparkSQL编程"><a href="#SparkSQL编程" class="headerlink" title="SparkSQL编程"></a>SparkSQL编程</h2><h3 id="SparkSession新的起始点"><a href="#SparkSession新的起始点" class="headerlink" title="SparkSession新的起始点"></a>SparkSession新的起始点</h3><p>在老的版本中，SparkSQL提供两种SQL查询起始点：一个叫SQLContext，用于Spark自己提供的SQL查询；一个叫HiveContext，用于连接Hive的查询。</p>
+<p>SparkSession是Spark最新的SQL查询起始点，实质上是SQLContext和HiveContext的组合，所以在SQLContext和HiveContext上可用的API在SparkSession上同样是可以使用的。SparkSession内部封装了sparkContext，所以计算实际上是由sparkContext完成的。</p>
+<h3 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h3><h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><p>在Spark SQL中SparkSession是创建DataFrame和执行SQL的入口，创建DataFrame有三种方式：通过Spark的数据源进行创建；从一个存在的RDD进行转换；还可以从Hive Table进行查询返回。</p>
+<p>1）从Spark数据源进行创建</p>
+<p>（1）查看Spark数据源进行创建的文件格式</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>
+——<span class="token operator">></span>
+<span class="token comment" spellcheck="true">// 可读取文件格式</span>
+csv   format   jdbc   json   load   option   options   orc   parquet   schema   table   text   textFile<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）读取json文件创建DataFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token string">"file///opt/module/spark/data/input/user.json"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token comment" spellcheck="true">// 直接得到了DataFrame并获得了字段</span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（3）展示结果</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2）从RDD进行转换</p>
+<p>后面用到细说</p>
+<p>3）从Hive Table进行查询返回</p>
+<p>hive数据库那节会细说</p>
+<h4 id="SQL风格语法-主要"><a href="#SQL风格语法-主要" class="headerlink" title="SQL风格语法(主要)"></a>SQL风格语法(主要)</h4><p>1）创建一个DataFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token string">"file///opt/module/spark/data/input/user.json"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）对DataFrame创建一个临时视图（之所以叫临时视图不叫临时表是因为RDD是不可变的，表是可变的，视图是不可变的）就可以用sql来进行查询了</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>createOrReplaceTempView<span class="token punctuation">(</span><span class="token string">"student"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>3）通过SQL语句实现查询全表</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> sqlDF <span class="token operator">=</span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"select * from student"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+sqlDF<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>4）结果展示</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> sqlDF<span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+
+scala<span class="token operator">></span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"select age from student"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+
+scala<span class="token operator">></span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"select avg(age) from student"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> avg<span class="token punctuation">(</span>age<span class="token punctuation">)</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>     <span class="token number">20.0</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注意：临时表是Session范围内的，Session退出后，表就失效了。如果想应用范围内有效，可以使用全局表。注意使用全局表时需要全路径访问，如：global_temp.student</p>
+<p>5）对于DataFrame创建一个全局表</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>createGlobalTempView<span class="token punctuation">(</span><span class="token string">"student"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>6）通过SQL语句实现查询全表</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"SELECT * FROM global_temp.student"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+
+scala<span class="token operator">></span> spark<span class="token punctuation">.</span>newSession<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"SELECT * FROM global_temp.student"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="DSL风格语法-次要"><a href="#DSL风格语法-次要" class="headerlink" title="DSL风格语法(次要)"></a>DSL风格语法(次要)</h4><p>1）创建一个DateFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>
+——<span class="token operator">></span>
+csv   format   jdbc   json   load   option   options   orc   parquet   schema   table   text   textFile<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）查看DataFrame的Schema信息</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>printSchema
+——<span class="token operator">></span>
+root
+ <span class="token operator">|</span><span class="token operator">--</span> age<span class="token operator">:</span> long <span class="token punctuation">(</span>nullable <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+ <span class="token operator">|</span><span class="token operator">--</span> name<span class="token operator">:</span> string <span class="token punctuation">(</span>nullable <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3）只查看”name”列数据</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>select<span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>4）查看”name”列数据以及”age+1”数据</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>select<span class="token punctuation">(</span>$<span class="token string">"name"</span><span class="token punctuation">,</span> $<span class="token string">"age"</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>   name<span class="token operator">|</span><span class="token punctuation">(</span>age <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>Michael<span class="token operator">|</span>     <span class="token keyword">null</span><span class="token operator">|</span>
+<span class="token operator">|</span>   Andy<span class="token operator">|</span>       <span class="token number">31</span><span class="token operator">|</span>
+<span class="token operator">|</span> Justin<span class="token operator">|</span>       <span class="token number">20</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>5）查看”age”大于”21”的数据</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>filter<span class="token punctuation">(</span>$<span class="token string">"age"</span> <span class="token operator">></span> <span class="token number">21</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>age<span class="token operator">|</span>name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span> <span class="token number">30</span><span class="token operator">|</span>Andy<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>6）按照”age”分组，查看数据条数</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>count<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span> count<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span>     <span class="token number">1</span><span class="token operator">|</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>     <span class="token number">1</span><span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>     <span class="token number">1</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="RDD转换为DateFrame"><a href="#RDD转换为DateFrame" class="headerlink" title="RDD转换为DateFrame"></a>RDD转换为DateFrame</h4><p><strong>注意：</strong>如果需要RDD与DF或者DS之间操作，那么都需要引入 import spark.implicits._  (spark不是包名，而是sparkSession对象的名称)</p>
+<p>前置条件：导入隐式转换并创建一个RDD</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">import</span> spark<span class="token punctuation">.</span>implicits<span class="token punctuation">.</span>_
+——<span class="token operator">></span>
+<span class="token keyword">import</span> spark<span class="token punctuation">.</span>implicits<span class="token punctuation">.</span>_
+
+scala<span class="token operator">></span> <span class="token keyword">val</span> rdd <span class="token operator">=</span> sc<span class="token punctuation">.</span>makeRDD<span class="token punctuation">(</span>List<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">"lisi"</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">"wangwu"</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+rdd<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token builtin">Int</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Int</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> ParallelCollectionRDD<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> at makeRDD at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">24</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>1）通过手动确定转换</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span>rdd<span class="token punctuation">.</span>toDF<span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token string">"age"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>id<span class="token operator">:</span> int<span class="token punctuation">,</span> name<span class="token operator">:</span> string <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token number">1</span> more field<span class="token punctuation">]</span>
+
+scala<span class="token operator">></span> df<span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> id<span class="token operator">|</span>    name<span class="token operator">|</span>age<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>  <span class="token number">1</span><span class="token operator">|</span>zhangsan<span class="token operator">|</span> <span class="token number">20</span><span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">2</span><span class="token operator">|</span>    lisi<span class="token operator">|</span> <span class="token number">30</span><span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">3</span><span class="token operator">|</span>  wangwu<span class="token operator">|</span> <span class="token number">40</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2）通过反射确定（需要用到样例类）</p>
+<p>（1）创建一个样例类</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">case</span> <span class="token keyword">class</span> People<span class="token punctuation">(</span>name<span class="token operator">:</span><span class="token builtin">String</span><span class="token punctuation">,</span> age<span class="token operator">:</span><span class="token builtin">Int</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+defined <span class="token keyword">class</span> People<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（2）根据样例类将RDD转换为DataFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> rdd <span class="token operator">=</span> sc<span class="token punctuation">.</span>makeRDD<span class="token punctuation">(</span>List<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"lisi"</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"wangwu"</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+rdd<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Int</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> ParallelCollectionRDD<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> at makeRDD at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">24</span>
+
+scala<span class="token operator">></span> <span class="token keyword">val</span> peopleRDD <span class="token operator">=</span> rdd<span class="token punctuation">.</span>map<span class="token punctuation">(</span>t<span class="token keyword">=></span><span class="token punctuation">{</span>People<span class="token punctuation">(</span>t<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> t<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+peopleRDD<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span>People<span class="token punctuation">]</span> <span class="token operator">=</span> MapPartitionsRDD<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span> at map at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">28</span>
+
+scala<span class="token operator">></span> peopleRDD<span class="token punctuation">.</span>toDF
+——<span class="token operator">></span>
+res2<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>name<span class="token operator">:</span> string<span class="token punctuation">,</span> age<span class="token operator">:</span> int<span class="token punctuation">]</span>
+
+scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> peopleRDD<span class="token punctuation">.</span>toDF
+——<span class="token operator">></span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>name<span class="token operator">:</span> string<span class="token punctuation">,</span> age<span class="token operator">:</span> int<span class="token punctuation">]</span>
+
+scala<span class="token operator">></span> df<span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>    name<span class="token operator">|</span>age<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>zhangsan<span class="token operator">|</span> <span class="token number">20</span><span class="token operator">|</span>
+<span class="token operator">|</span>    lisi<span class="token operator">|</span> <span class="token number">30</span><span class="token operator">|</span>
+<span class="token operator">|</span>  wangwu<span class="token operator">|</span> <span class="token number">40</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3）通过编程的方式（了解）</p>
+<p>（1）导入所需的类型</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>types<span class="token punctuation">.</span>_
+——<span class="token operator">></span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>types<span class="token punctuation">.</span>_<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（2）创建Schema</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> structType<span class="token operator">:</span> StructType <span class="token operator">=</span> StructType<span class="token punctuation">(</span>StructField<span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span> StringType<span class="token punctuation">)</span> <span class="token operator">:</span><span class="token operator">:</span> StructField<span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">,</span> IntegerType<span class="token punctuation">)</span> <span class="token operator">:</span><span class="token operator">:</span> Nil<span class="token punctuation">)</span>
+——<span class="token operator">></span>
+structType<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>types<span class="token punctuation">.</span>StructType <span class="token operator">=</span> StructType<span class="token punctuation">(</span>StructField<span class="token punctuation">(</span>name<span class="token punctuation">,</span>StringType<span class="token punctuation">,</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">,</span> StructField<span class="token punctuation">(</span>age<span class="token punctuation">,</span>IntegerType<span class="token punctuation">,</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（3）导入所需的类型</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Row
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Row<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（4）根据给定的类型创建二元组RDD</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> data <span class="token operator">=</span> peopleRDD<span class="token punctuation">.</span>map<span class="token punctuation">{</span> x <span class="token keyword">=></span> <span class="token keyword">val</span> para <span class="token operator">=</span> x<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span>Row<span class="token punctuation">(</span>para<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span>para<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>trim<span class="token punctuation">.</span>toInt<span class="token punctuation">)</span><span class="token punctuation">}</span>
+data<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Row<span class="token punctuation">]</span> <span class="token operator">=</span> MapPartitionsRDD<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span> at map at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">33</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（5）根据数据及给定的schema创建DataFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> dataFrame <span class="token operator">=</span> spark<span class="token punctuation">.</span>createDataFrame<span class="token punctuation">(</span>data<span class="token punctuation">,</span> structType<span class="token punctuation">)</span>
+dataFrame<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>name<span class="token operator">:</span> string<span class="token punctuation">,</span> age<span class="token operator">:</span> int<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h4 id="DateFrame转换为RDD"><a href="#DateFrame转换为RDD" class="headerlink" title="DateFrame转换为RDD"></a>DateFrame转换为RDD</h4><p>直接调用rdd即可</p>
+<p>1）创建一个DataFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token string">"/opt/module/spark/examples/src/main/resources/people.json"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）将DataFrame转换为RDD</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> dfToRDD <span class="token operator">=</span> df<span class="token punctuation">.</span>rdd
+dfToRDD<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Row<span class="token punctuation">]</span> <span class="token operator">=</span> MapPartitionsRDD<span class="token punctuation">[</span><span class="token number">19</span><span class="token punctuation">]</span> at rdd at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">29</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>3）打印RDD</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> dfToRDD<span class="token punctuation">.</span>collect
+res13<span class="token operator">:</span> Array<span class="token punctuation">[</span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Row<span class="token punctuation">]</span> <span class="token operator">=</span> Array<span class="token punctuation">(</span><span class="token punctuation">[</span>Michael<span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>Andy<span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>Justin<span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="DataSet"><a href="#DataSet" class="headerlink" title="DataSet"></a>DataSet</h3><p>Dataset是具有强类型的数据集合，需要提供对应的类型信息。</p>
+<h4 id="创建-1"><a href="#创建-1" class="headerlink" title="创建"></a>创建</h4><p>1）创建一个样例类</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">case</span> <span class="token keyword">class</span> Person<span class="token punctuation">(</span>name<span class="token operator">:</span> <span class="token builtin">String</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token builtin">Long</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+defined <span class="token keyword">class</span> Person<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）创建DataSet</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> caseClassDS <span class="token operator">=</span> Seq<span class="token punctuation">(</span>Person<span class="token punctuation">(</span><span class="token string">"Andy"</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>toDS<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+caseClassDS<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Dataset<span class="token punctuation">[</span>Person<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>name<span class="token operator">:</span> string<span class="token punctuation">,</span> age<span class="token operator">:</span> bigint<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>3）查看</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> caseClassDS<span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>name<span class="token operator">|</span>age<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>Andy<span class="token operator">|</span> <span class="token number">32</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="RDD转换为DataSet"><a href="#RDD转换为DataSet" class="headerlink" title="RDD转换为DataSet"></a>RDD转换为DataSet</h4><p>SparkSQL能够自动将包含有case类的RDD转换成DataFrame，case类定义了table的结构，case类属性通过反射变成了表的列名。</p>
+<p>1）创建一个RDD</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> rdd <span class="token operator">=</span> sc<span class="token punctuation">.</span>makeRDD<span class="token punctuation">(</span>List<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"lisi"</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"wangwu"</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+rdd<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Int</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> ParallelCollectionRDD<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> at makeRDD at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">24</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）创建一个样例类</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">case</span> <span class="token keyword">class</span> Person<span class="token punctuation">(</span>name<span class="token operator">:</span> <span class="token builtin">String</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token builtin">Long</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+defined <span class="token keyword">class</span> Person<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>3）将RDD转化为DataSet</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> mapRDD <span class="token operator">=</span> rdd<span class="token punctuation">.</span>map<span class="token punctuation">(</span>t <span class="token keyword">=></span> <span class="token punctuation">{</span>Person<span class="token punctuation">(</span>t<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> t<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+mapRDD<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span>Person<span class="token punctuation">]</span> <span class="token operator">=</span> MapPartitionsRDD<span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span> at map at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">28</span>
+
+scala<span class="token operator">></span> mapRDD<span class="token punctuation">.</span>toDS<span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>    name<span class="token operator">|</span>age<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>zhangsan<span class="token operator">|</span> <span class="token number">20</span><span class="token operator">|</span>
+<span class="token operator">|</span>    lisi<span class="token operator">|</span> <span class="token number">30</span><span class="token operator">|</span>
+<span class="token operator">|</span>  wangwu<span class="token operator">|</span> <span class="token number">40</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="DataSet转换为RDD"><a href="#DataSet转换为RDD" class="headerlink" title="DataSet转换为RDD"></a>DataSet转换为RDD</h4><p>调用rdd方法即可。</p>
+<p>1）创建一个DataSet</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> DS <span class="token operator">=</span> Seq<span class="token punctuation">(</span>Person<span class="token punctuation">(</span><span class="token string">"Andy"</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>toDS<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+DS<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Dataset<span class="token punctuation">[</span>Person<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>name<span class="token operator">:</span> string<span class="token punctuation">,</span> age<span class="token operator">:</span> bigint<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）将DataSet转换为RDD</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> DS<span class="token punctuation">.</span>rdd
+——<span class="token operator">></span>
+res11<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>rdd<span class="token punctuation">.</span>RDD<span class="token punctuation">[</span>Person<span class="token punctuation">]</span> <span class="token operator">=</span> MapPartitionsRDD<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">]</span> at rdd at <span class="token operator">&lt;</span>console<span class="token operator">></span><span class="token operator">:</span><span class="token number">28</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="DataFrame与DataSet的互操作"><a href="#DataFrame与DataSet的互操作" class="headerlink" title="DataFrame与DataSet的互操作"></a>DataFrame与DataSet的互操作</h3><ol>
+<li>DataFrame转换为DataSet</li>
+</ol>
+<p>1）创建一个DateFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token string">"examples/src/main/resources/people.json"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）创建一个样例类</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">case</span> <span class="token keyword">class</span> Person<span class="token punctuation">(</span>name<span class="token operator">:</span> <span class="token builtin">String</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token builtin">Long</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+defined <span class="token keyword">class</span> Person<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>3）将DateFrame转化为DataSet</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>as<span class="token punctuation">[</span>Person<span class="token punctuation">]</span>
+——<span class="token operator">></span>
+res14<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Dataset<span class="token punctuation">[</span>Person<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<ol start="2">
+<li>DataSet转换为DataFrame</li>
+</ol>
+<p>1）创建一个样例类</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">case</span> <span class="token keyword">class</span> Person<span class="token punctuation">(</span>name<span class="token operator">:</span> <span class="token builtin">String</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token builtin">Long</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+defined <span class="token keyword">class</span> Person<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>2）创建DataSet</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> ds <span class="token operator">=</span> Seq<span class="token punctuation">(</span>Person<span class="token punctuation">(</span><span class="token string">"Andy"</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>toDS<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+ds<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>Dataset<span class="token punctuation">[</span>Person<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>name<span class="token operator">:</span> string<span class="token punctuation">,</span> age<span class="token operator">:</span> bigint<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>3）将DataSet转化为DataFrame</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> ds<span class="token punctuation">.</span>toDF
+——<span class="token operator">></span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>name<span class="token operator">:</span> string<span class="token punctuation">,</span> age<span class="token operator">:</span> bigint<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>4）展示</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> df<span class="token punctuation">.</span>show
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>name<span class="token operator">|</span>age<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span>Andy<span class="token operator">|</span> <span class="token number">32</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="DataSet转DataFrame"><a href="#DataSet转DataFrame" class="headerlink" title="DataSet转DataFrame"></a>DataSet转DataFrame</h4><p>这个很简单，因为只是把case class封装成Row</p>
+<p>（1）导入隐式转换</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">import</span> spark<span class="token punctuation">.</span>implicits<span class="token punctuation">.</span>_<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（2）转换</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">val</span> testDF <span class="token operator">=</span> testDS<span class="token punctuation">.</span>toDF<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="DataFrame转DataSet"><a href="#DataFrame转DataSet" class="headerlink" title="DataFrame转DataSet"></a>DataFrame转DataSet</h4><p>（1）导入隐式转换</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">import</span> spark<span class="token punctuation">.</span>implicits<span class="token punctuation">.</span>_<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（2）创建样例类</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">case</span> <span class="token keyword">class</span> Coltest<span class="token punctuation">(</span>col1<span class="token operator">:</span><span class="token builtin">String</span><span class="token punctuation">,</span>col2<span class="token operator">:</span><span class="token builtin">Int</span><span class="token punctuation">)</span><span class="token keyword">extends</span> Serializable <span class="token comment" spellcheck="true">//定义字段名和类型</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（3）转换</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">val</span> testDS <span class="token operator">=</span> testDF<span class="token punctuation">.</span>as<span class="token punctuation">[</span>Coltest<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这种方法就是在给出每一列的类型后，使用as方法，转成Dataset，这在数据类型是DataFrame又需要针对各个字段处理时极为方便。在使用一些特殊的操作时，一定要加上 import spark.implicits._ 不然toDF、toDS无法使用。</p>
+<p><img src="2-2.png" alt></p>
+<p>RDD加上结构就是DF，DF加上类型就是DS ——&gt; RDD加上类就是DS</p>
+<h3 id="RDD、DataFrame、DataSet"><a href="#RDD、DataFrame、DataSet" class="headerlink" title="RDD、DataFrame、DataSet"></a>RDD、DataFrame、DataSet</h3><p>在SparkSQL中Spark为我们提供了两个新的抽象，分别是DataFrame和DataSet。</p>
+<p>DF、DS和RDD区别：</p>
+<p>版本的产生：RDD (Spark1.0) —&gt; Dataframe(Spark1.3) —&gt; Dataset(Spark1.6)</p>
+<p>如果同样的数据都给到这三个数据结构，他们分别计算之后，都会给出相同的结果。不同是的他们的执行效率和执行方式。</p>
+<p>在后期的Spark版本中，DataSet会逐步取代RDD和DataFrame成为唯一的API接口。</p>
+<h4 id="三者的共性"><a href="#三者的共性" class="headerlink" title="三者的共性"></a>三者的共性</h4><ol>
+<li><p>RDD、DataFrame、Dataset全都是spark平台下的分布式弹性数据集，为处理超大型数据提供便利</p>
+</li>
+<li><p>三者都有惰性机制，在进行创建、转换，如map方法时，不会立即执行，只有在遇到Action如foreach时，三者才会开始遍历运算。</p>
+</li>
+<li><p>三者都会根据spark的内存情况自动缓存运算，这样即使数据量很大，也不用担心会内存溢出。</p>
+</li>
+<li><p>三者都有partition的概念</p>
+</li>
+<li><p>三者有许多共同的函数，如filter，排序等</p>
+</li>
+<li><p>在对DataFrame和Dataset进行操作许多操作都需要这个包进行支持<br>import spark.implicits._</p>
+</li>
+<li><p>DataFrame和Dataset均可使用模式匹配获取各个字段的值和类型</p>
+</li>
+</ol>
+<h4 id="三者的区别"><a href="#三者的区别" class="headerlink" title="三者的区别"></a>三者的区别</h4><ol>
+<li>RDD:</li>
+</ol>
+<p>1）RDD一般和spark mlib（机器学习库）同时使用</p>
+<p>2）RDD不支持sparksql操作</p>
+<ol start="2">
+<li>DataFrame:</li>
+</ol>
+<p>1）与RDD和Dataset不同，DataFrame每一行的类型固定为Row，每一列的值没法直接访问，只有通过解析才能获取各个字段的值，如：</p>
+<pre class="line-numbers language-scala"><code class="language-scala">testDF<span class="token punctuation">.</span>foreach<span class="token punctuation">{</span>
+    line <span class="token keyword">=></span>
+    <span class="token keyword">val</span> col1<span class="token operator">=</span>line<span class="token punctuation">.</span>getAs<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token string">"col1"</span><span class="token punctuation">)</span>
+    <span class="token keyword">val</span> col2<span class="token operator">=</span>line<span class="token punctuation">.</span>getAs<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token string">"col2"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2）DataFrame与Dataset一般不与spark mlib同时使用</p>
+<p>3）DataFrame与Dataset均支持sparksql的操作，比如select，groupby之类，还能注册临时表/视窗，进行sql语句操作，如：</p>
+<pre class="line-numbers language-scala"><code class="language-scala">dataDF<span class="token punctuation">.</span>createOrReplaceTempView<span class="token punctuation">(</span><span class="token string">"tmp"</span><span class="token punctuation">)</span>
+spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"select  ROW,DATE from tmp where DATE is not null order by DATE"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span><span class="token boolean">false</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>4）DataFrame与Dataset支持一些特别方便的保存方式，比如保存成csv，可以带上表头，这样每一列的字段名一目了然</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token comment" spellcheck="true">//保存</span>
+<span class="token keyword">val</span> saveoptions <span class="token operator">=</span> Map<span class="token punctuation">(</span><span class="token string">"header"</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"true"</span><span class="token punctuation">,</span> <span class="token string">"delimiter"</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"\t"</span><span class="token punctuation">,</span> <span class="token string">"path"</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"hdfs://hadoop102:9000/test"</span><span class="token punctuation">)</span>
+datawDF<span class="token punctuation">.</span>write<span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"com.atguigu.spark.csv"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>mode<span class="token punctuation">(</span>SaveMode<span class="token punctuation">.</span>Overwrite<span class="token punctuation">)</span><span class="token punctuation">.</span>options<span class="token punctuation">(</span>saveoptions<span class="token punctuation">)</span><span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">//读取</span>
+<span class="token keyword">val</span> options <span class="token operator">=</span> Map<span class="token punctuation">(</span><span class="token string">"header"</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"true"</span><span class="token punctuation">,</span> <span class="token string">"delimiter"</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"\t"</span><span class="token punctuation">,</span> <span class="token string">"path"</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token string">"hdfs://hadoop102:9000/test"</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> datarDF<span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>options<span class="token punctuation">(</span>options<span class="token punctuation">)</span><span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"com.atguigu.spark.csv"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>利用这样的保存方式，可以方便的获得字段名和列的对应，而且分隔符（delimiter）可以自由指定。</p>
+<ol start="3">
+<li>Dataset:</li>
+</ol>
+<p>1）Dataset和DataFrame拥有完全相同的成员函数，区别只是每一行的数据类型不同。</p>
+<p>2）DataFrame也可以叫Dataset[Row],每一行的类型是Row，不解析，每一行究竟有哪些字段，各个字段又是什么类型都无从得知，只能用上面提到的getAS方法或者共性中的第七条提到的模式匹配拿出特定字段。而Dataset中，每一行是什么类型是不一定的，在自定义了case class之后可以很自由的获得每一行的信息</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">case</span> <span class="token keyword">class</span> Coltest<span class="token punctuation">(</span>col1<span class="token operator">:</span><span class="token builtin">String</span><span class="token punctuation">,</span>col2<span class="token operator">:</span><span class="token builtin">Int</span><span class="token punctuation">)</span><span class="token keyword">extends</span> Serializable <span class="token comment" spellcheck="true">//定义字段名和类型</span>
+<span class="token comment" spellcheck="true">/**
+ rdd
+ ("a", 1)
+ ("b", 1)
+ ("a", 1)
+**/</span>
+<span class="token keyword">val</span> test<span class="token operator">:</span> Dataset<span class="token punctuation">[</span>Coltest<span class="token punctuation">]</span><span class="token operator">=</span>rdd<span class="token punctuation">.</span>map<span class="token punctuation">{</span>line<span class="token keyword">=></span>
+      Coltest<span class="token punctuation">(</span>line<span class="token punctuation">.</span>_1<span class="token punctuation">,</span>line<span class="token punctuation">.</span>_2<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">.</span>toDS
+test<span class="token punctuation">.</span>map<span class="token punctuation">{</span>
+      line<span class="token keyword">=></span>
+        println<span class="token punctuation">(</span>line<span class="token punctuation">.</span>col1<span class="token punctuation">)</span>
+        println<span class="token punctuation">(</span>line<span class="token punctuation">.</span>col2<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看出，Dataset在需要访问列中的某个字段时是非常方便的，然而，如果要写一些适配性很强的函数时，如果使用Dataset，行的类型又不确定，可能是各种case class，无法实现适配，这时候用DataFrame即Dataset[Row]就能比较好的解决问题</p>
+<h3 id="IDEA创建SparkSQL程序"><a href="#IDEA创建SparkSQL程序" class="headerlink" title="IDEA创建SparkSQL程序"></a>IDEA创建SparkSQL程序</h3><p>IDEA中程序的打包和运行方式都和SparkCore类似，Maven依赖中需要添加新的依赖项：</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.spark<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spark-sql_2.11<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2.1.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>程序如下：</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">package</span> com<span class="token punctuation">.</span>swenchao<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql
+
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span><span class="token punctuation">{</span>DataFrame<span class="token punctuation">,</span> SparkSession<span class="token punctuation">}</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>SparkConf
+
+<span class="token comment" spellcheck="true">/**
+ * @Author: Swenchao
+ * @Date: 2020/10/5 下午 04:38
+ * @Description:
+ * @Modified:
+ * @Version:
+ */</span>
+<span class="token keyword">object</span> SparkSQL01_demo <span class="token punctuation">{</span>
+    <span class="token keyword">def</span> main<span class="token punctuation">(</span>args<span class="token operator">:</span> Array<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Unit</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// 创建配置对象</span>
+        <span class="token keyword">val</span> sparkConf <span class="token operator">=</span> <span class="token keyword">new</span> SparkConf<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>setMaster<span class="token punctuation">(</span><span class="token string">"local[*]"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>setAppName<span class="token punctuation">(</span><span class="token string">"SparkSQL01_demo"</span><span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true">// 创建SparkSession</span>
+        <span class="token keyword">val</span> spark<span class="token operator">:</span> SparkSession <span class="token operator">=</span> SparkSession<span class="token punctuation">.</span>builder<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>config<span class="token punctuation">(</span>sparkConf<span class="token punctuation">)</span><span class="token punctuation">.</span>getOrCreate<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true">// 读取文件数据</span>
+        <span class="token keyword">val</span> frame<span class="token operator">:</span> DataFrame <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token string">"in/user.json"</span><span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true">// 展示</span>
+        frame<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        spark<span class="token punctuation">.</span>stop
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="用户自定义函数"><a href="#用户自定义函数" class="headerlink" title="用户自定义函数"></a>用户自定义函数</h3><p>在Shell窗口中可以通过spark.udf功能用户可以自定义函数。</p>
+<h4 id="用户自定义UDF函数"><a href="#用户自定义UDF函数" class="headerlink" title="用户自定义UDF函数"></a>用户自定义UDF函数</h4><pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token string">"file///opt/module/spark/data/input/user.json"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+df<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span>
+
+scala<span class="token operator">></span> df<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+
+scala<span class="token operator">></span> spark<span class="token punctuation">.</span>udf<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"addName"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>x<span class="token operator">:</span><span class="token builtin">String</span><span class="token punctuation">)</span><span class="token keyword">=></span> <span class="token string">"Name:"</span><span class="token operator">+</span>x<span class="token punctuation">)</span>
+——<span class="token operator">></span>
+res5<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>expressions<span class="token punctuation">.</span>UserDefinedFunction <span class="token operator">=</span> UserDefinedFunction<span class="token punctuation">(</span><span class="token operator">&lt;</span>function1<span class="token operator">></span><span class="token punctuation">,</span>StringType<span class="token punctuation">,</span>Some<span class="token punctuation">(</span>List<span class="token punctuation">(</span>StringType<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+scala<span class="token operator">></span> df<span class="token punctuation">.</span>createOrReplaceTempView<span class="token punctuation">(</span><span class="token string">"people"</span><span class="token punctuation">)</span>
+
+scala<span class="token operator">></span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"Select addName(name), age from people"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>UDF<span class="token operator">:</span>addName<span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token operator">|</span> age<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span>
+<span class="token operator">|</span>     Name<span class="token operator">:</span>Michael<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>
+<span class="token operator">|</span>        Name<span class="token operator">:</span>Andy<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>
+<span class="token operator">|</span>      Name<span class="token operator">:</span>Justin<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="用户自定义聚合函数"><a href="#用户自定义聚合函数" class="headerlink" title="用户自定义聚合函数"></a>用户自定义聚合函数</h4><p>强类型的Dataset和弱类型的DataFrame都提供了相关的聚合函数， 如 count()，countDistinct()，avg()，max()，min()。除此之外，用户可以设定自己的自定义聚合函数。</p>
+<p>弱类型用户自定义聚合函数：通过继承UserDefinedAggregateFunction来实现用户自定义聚合函数。下面展示一个求平均工资的自定义聚合函数。</p>
+<p>demo地址：</p>
+<p><a href="https://github.com/Swenchao/SparkCode/blob/master/src/main/scala/com/swenchao/spark/sql/SparkSQL05_UDAF.scala" target="_blank" rel="noopener">com/swenchao/spark/sql/SparkSQL05_UDAF.scala</a></p>
+<p><a href="https://github.com/Swenchao/SparkCode/blob/master/src/main/scala/com/swenchao/spark/sql/SparkSQL06_UDAF_Class.scala" target="_blank" rel="noopener">com/swenchao/spark/sql/SparkSQL06_UDAF_Class.scala</a></p>
+<h2 id="SparkSQL数据源"><a href="#SparkSQL数据源" class="headerlink" title="SparkSQL数据源"></a>SparkSQL数据源</h2><h3 id="通用加载-保存方法"><a href="#通用加载-保存方法" class="headerlink" title="通用加载/保存方法"></a>通用加载/保存方法</h3><h4 id="手动指定选项"><a href="#手动指定选项" class="headerlink" title="手动指定选项"></a>手动指定选项</h4><p>Spark SQL的DataFrame接口支持多种数据源的操作。一个DataFrame可以进行RDDs方式的操作，也可以被注册为临时表。把DataFrame注册为临时表之后，就可以对该DataFrame执行SQL查询。</p>
+<p>Spark SQL的默认数据源为Parquet格式。数据源为Parquet文件时，Spark SQL可以方便的执行所有的操作。修改配置项 spark.sql.sources.default，可修改默认数据源格式。</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">"examples/src/main/resources/users.parquet"</span><span class="token punctuation">)</span> df<span class="token punctuation">.</span>select<span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token string">"favorite_color"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>write<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"namesAndFavColors.parquet"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>当数据源格式不是parquet格式文件时，需要手动指定数据源的格式。数据源格式需要指定全名（例如：org.apache.spark.sql.parquet），如果数据源格式为内置格式，则只需要指定简称定json, parquet, jdbc, orc, libsvm, csv, text来指定数据的格式。</p>
+<p>可以通过 SparkSession 提供的 read.load 方法用于通用加载数据，使用write和save保存数据。 </p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> peopleDF <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"json"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">"examples/src/main/resources/people.json"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+peopleDF<span class="token punctuation">.</span>write<span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"parquet"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000/namesAndAges.parquet"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>除此之外，可以直接运行SQL在文件上：</p>
+<pre class="line-numbers language-scala"><code class="language-scala">scala<span class="token operator">></span> <span class="token keyword">val</span> sqlDF <span class="token operator">=</span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"SELECT * FROM parquet.`hdfs://hadoop102:9000/namesAndAges.parquet`"</span><span class="token punctuation">)</span>
+
+scala<span class="token operator">></span> sqlDF<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+scala<span class="token operator">></span> <span class="token keyword">val</span> peopleDF <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"json"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">"examples/src/main/resources/people.json"</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+peopleDF<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>DataFrame <span class="token operator">=</span> <span class="token punctuation">[</span>age<span class="token operator">:</span> bigint<span class="token punctuation">,</span> name<span class="token operator">:</span> string<span class="token punctuation">]</span>
+
+scala<span class="token operator">></span> peopleDF<span class="token punctuation">.</span>write<span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"parquet"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000/namesAndAges.parquet"</span><span class="token punctuation">)</span>
+
+scala<span class="token operator">></span> peopleDF<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+——<span class="token operator">></span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+
+scala<span class="token operator">></span> <span class="token keyword">val</span> sqlDF <span class="token operator">=</span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"SELECT * FROM parquet.`hdfs:// hadoop102:9000/namesAndAges.parquet`"</span><span class="token punctuation">)</span>
+
+scala<span class="token operator">></span> sqlDF<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span> age<span class="token operator">|</span>   name<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span>
+<span class="token operator">|</span><span class="token keyword">null</span><span class="token operator">|</span>Michael<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">30</span><span class="token operator">|</span>   Andy<span class="token operator">|</span>
+<span class="token operator">|</span>  <span class="token number">19</span><span class="token operator">|</span> Justin<span class="token operator">|</span>
+<span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">+</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span><span class="token operator">-</span><span class="token operator">+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="文件保存选项"><a href="#文件保存选项" class="headerlink" title="文件保存选项"></a>文件保存选项</h4><p>可以采用SaveMode执行存储操作，SaveMode定义了对数据的处理模式。需要注意的是，这些保存模式不使用任何锁定，不是原子操作。此外，当使用Overwrite方式执行时，在输出新数据之前原数据就已经被删除。SaveMode详细介绍如下表：</p>
+<table>
+<thead>
+<tr>
+<th>Scala/Java</th>
+<th>Any Language</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SaveMode.ErrorIfExists(default)</td>
+<td>“error”(default)</td>
+<td>如果文件存在，则报错</td>
+</tr>
+<tr>
+<td>SaveMode.Append</td>
+<td>“append”</td>
+<td>追加</td>
+</tr>
+<tr>
+<td>SaveMode.Overwrite</td>
+<td>“overwrite”</td>
+<td>覆写</td>
+</tr>
+<tr>
+<td>SaveMode.Ignore</td>
+<td>“ignore”</td>
+<td>数据存在，则忽略</td>
+</tr>
+</tbody></table>
+<h3 id="JSON文件"><a href="#JSON文件" class="headerlink" title="JSON文件"></a>JSON文件</h3><p>Spark SQL 能够自动推测 JSON数据集的结构，并将它加载为一个Dataset[Row]. 可以通过SparkSession.read.json()去加载一个 一个JSON 文件。</p>
+<p><strong>注意：</strong>这个JSON文件不是一个传统的JSON文件，每一行都得是一个JSON串。</p>
+<pre><code>{&quot;name&quot;:&quot;Michael&quot;}
+{&quot;name&quot;:&quot;Andy&quot;, &quot;age&quot;:30}
+{&quot;name&quot;:&quot;Justin&quot;, &quot;age&quot;:19}</code></pre><h3 id="Parquet文件"><a href="#Parquet文件" class="headerlink" title="Parquet文件"></a>Parquet文件</h3><p>Parquet是一种流行的列式存储格式，可以高效地存储具有嵌套字段的记录。Parquet格式经常在Hadoop生态圈中被使用，它也支持Spark SQL的全部数据类型。Spark SQL 提供了直接读取和存储 Parquet 格式文件的方法。 </p>
+<h3 id="JDBC"><a href="#JDBC" class="headerlink" title="JDBC"></a>JDBC</h3><p>Spark SQL可以通过JDBC从关系型数据库中读取数据的方式创建DataFrame，通过对DataFrame一系列的计算后，还可以将数据再写回关系型数据库中。</p>
+<p><strong>注意：</strong>需要将相关的数据库驱动放到spark的类路径下。</p>
+<p>（1）启动spark-shell</p>
+<pre class="line-numbers language-shell"><code class="language-shell">$ bin/spark-shell<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（2）从Mysql数据库加载数据方式一</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">val</span> jdbcDF <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"jdbc"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"url"</span><span class="token punctuation">,</span> <span class="token string">"jdbc:mysql://hadoop102:3306/rdd"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"dbtable"</span><span class="token punctuation">,</span> <span class="token string">"rddtable"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">,</span> <span class="token string">"root"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">,</span> <span class="token string">"123456"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（3）从Mysql数据库加载数据方式二</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token keyword">val</span> connectionProperties <span class="token operator">=</span> <span class="token keyword">new</span> Properties<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+connectionProperties<span class="token punctuation">.</span>put<span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">,</span> <span class="token string">"root"</span><span class="token punctuation">)</span>
+
+connectionProperties<span class="token punctuation">.</span>put<span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">,</span> <span class="token string">"123456"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">val</span> jdbcDF2 <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span>jdbc<span class="token punctuation">(</span><span class="token string">"jdbc:mysql://hadoop102:3306/rdd"</span><span class="token punctuation">,</span> <span class="token string">"rddtable"</span><span class="token punctuation">,</span> connectionProperties<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（4）将数据写入Mysql方式一</p>
+<pre class="line-numbers language-scala"><code class="language-scala">jdbcDF<span class="token punctuation">.</span>write<span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"jdbc"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"url"</span><span class="token punctuation">,</span> <span class="token string">"jdbc:mysql://hadoop102:3306/rdd"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"dbtable"</span><span class="token punctuation">,</span> <span class="token string">"dftable"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">,</span> <span class="token string">"root"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">,</span> <span class="token string">"123456"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（5）将数据写入Mysql方式二</p>
+<pre class="line-numbers language-scala"><code class="language-scala">jdbcDF2<span class="token punctuation">.</span>write<span class="token punctuation">.</span>jdbc<span class="token punctuation">(</span><span class="token string">"jdbc:mysql://hadoop102:3306/rdd"</span><span class="token punctuation">,</span> <span class="token string">"db"</span><span class="token punctuation">,</span> connectionProperties<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="Hive数据库"><a href="#Hive数据库" class="headerlink" title="Hive数据库"></a>Hive数据库</h3><p>Apache Hive是Hadoop上的SQL引擎，Spark SQL编译时可以包含Hive支持，也可以不包含。包含Hive支持的Spark SQL可以支持Hive表访问、UDF(用户自定义函数)以及 Hive 查询语言(HiveQL/HQL)等。需要强调的一点是，如果要在Spark SQL中包含Hive的库，并不需要事先安装Hive。一般来说，最好还是在编译Spark SQL时引入Hive支持，这样就可以使用这些特性了。如果你下载的是二进制版本的 Spark，它应该已经在编译时添加了 Hive 支持。 </p>
+<p>若要把Spark SQL连接到一个部署好的Hive上，你必须把hive-site.xml复制到 Spark的配置文件目录中($SPARK_HOME/conf)。即使没有部署好Hive，Spark SQL也可以运行。 需要注意的是，如果你没有部署好Hive，Spark SQL会在当前的工作目录中创建出自己的Hive 元数据仓库，叫作 metastore_db。此外，如果你尝试使用 HiveQL 中的 CREATE TABLE (并非 CREATE EXTERNAL TABLE)语句来创建表，这些表会被放在你默认的文件系统中的 /user/hive/warehouse 目录中(如果你的 classpath 中有配好的 hdfs-site.xml，默认的文件系统就是 HDFS，否则就是本地文件系统)。</p>
+<h4 id="内嵌Hive应用"><a href="#内嵌Hive应用" class="headerlink" title="内嵌Hive应用"></a>内嵌Hive应用</h4><p>如果要使用内嵌的Hive，什么都不用做，直接用就可以了。 </p>
+<p>可以通过添加参数初次指定数据仓库地址：</p>
+<pre class="line-numbers language-xml"><code class="language-xml">--conf spark.sql.warehouse.dir=hdfs://hadoop102/spark-wearhouse<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="3-1.png" alt></p>
+<p><strong>注意：</strong>如果你使用的是内部的Hive，在Spark2.0之后，spark.sql.warehouse.dir用于指定数据仓库的地址，如果你需要是用HDFS作为路径，那么需要将core-site.xml和hdfs-site.xml 加入到Spark conf目录，否则只会创建master节点上的warehouse目录，查询时会出现文件找不到的问题，这是需要使用HDFS，则需要将metastore删除，重启集群。</p>
+<h4 id="外部Hive应用"><a href="#外部Hive应用" class="headerlink" title="外部Hive应用"></a>外部Hive应用</h4><p>如果想连接外部已经部署好的Hive，需要通过以下几个步骤。</p>
+<p>1) 将Hive中的hive-site.xml拷贝或者软连接到Spark安装目录下的conf目录下。</p>
+<p>2) 打开spark shell，注意带上访问Hive元数据库的JDBC客户端</p>
+<pre class="line-numbers language-shell"><code class="language-shell">$ bin/spark-shell  --jars mysql-connector-java-5.1.27-bin.jar<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>3) 运行结果</p>
+<p><img src="3-2.png" alt></p>
+<p>外部hive创建的表</p>
+<h4 id="运行Spark-SQL-CLI"><a href="#运行Spark-SQL-CLI" class="headerlink" title="运行Spark SQL CLI"></a>运行Spark SQL CLI</h4><p>Spark SQL CLI可以很方便的在本地运行Hive元数据服务以及从命令行执行查询任务。在Spark目录下执行如下命令启动Spark SQL CLI：</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token punctuation">.</span>/bin<span class="token operator">/</span>spark<span class="token operator">-</span>sql<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>进入另外一个sparkSQL的界面，可以直接写sql，类似于mysql的黑白框</p>
+<h4 id="代码中使用Hive"><a href="#代码中使用Hive" class="headerlink" title="代码中使用Hive"></a>代码中使用Hive</h4><p>（1）添加依赖：</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.spark<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spark-hive_2.11<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2.1.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!-- https://mvnrepository.com/artifact/org.apache.hive/hive-exec --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.hive<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>hive-exec<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.2.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）创建SparkSession时需要添加hive支持（.enableHiveSupport() 这部分）</p>
+<pre class="line-numbers language-scala"><code class="language-scala"><span class="token comment" spellcheck="true">// 使用内置Hive需要指定一个Hive仓库地址（config("spark.sql.warehouse.dir", warehouseLocation) 这部分类似）</span>
+<span class="token keyword">val</span> warehouseLocation<span class="token operator">:</span> <span class="token builtin">String</span> <span class="token operator">=</span> <span class="token keyword">new</span> File<span class="token punctuation">(</span><span class="token string">"spark-warehouse"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>getAbsolutePath
+
+<span class="token keyword">val</span> spark <span class="token operator">=</span> SparkSession<span class="token punctuation">.</span>builder<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>appName<span class="token punctuation">(</span><span class="token string">"Spark Hive Example"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>config<span class="token punctuation">(</span><span class="token string">"spark.sql.warehouse.dir"</span><span class="token punctuation">,</span> warehouseLocation<span class="token punctuation">)</span><span class="token punctuation">.</span>enableHiveSupport<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>getOrCreate<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>注意：</strong>若使用的是外部Hive，则需要将hive-site.xml添加到ClassPath下。</p>
+
+            </div>
+            <hr />
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">假装会有人打赏:)</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        <p class="reprint-tip">
+            <i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;
+            <span>转载规则</span>
+        </p>
+        
+            <div class="center-align">
+                <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
+                    <img alt=""
+                         style="border-width:0"
+                         src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
+                </a>
+            </div>
+            <br/>
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
+                  property="dct:title" rel="dct:type">
+                    《SparkSQL》
+                </span> 由
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2020/10/06/sparksql/" property="cc:attributionName"
+               rel="cc:attributionURL">
+                文超
+            </a> 采用
+            <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
+                知识共享署名 4.0 国际许可协议
+            </a>进行许可。
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+        </div>
+    </div>
+
+    
+    <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '526c72c4768212d8fb58',
+        clientSecret: 'efb518d7a883110ad3345e3f0bd717d77e53856c',
+        repo: 'Swenchao.github.io',
+        owner: 'Swenchao',
+        admin: "Swenchao",
+        id: '2020/10/06/sparksql/',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+    <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<!-- <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script> -->
+
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: '',
+        appKey: '',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'false' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '如果你没有GitHub账号，还可以在这里评论呢'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/10/06/sparkstreaming/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="SparkStreaming">
+                        
+                        <span class="card-title">SparkStreaming</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            SparkStreaming完整笔记
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-10-06
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/大数据/" class="post-category" target="_blank">
+                                    大数据
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/SparkStreaming/" target="_blank">
+                        <span class="chip bg-color">SparkStreaming</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/10/05/sparkcore-wan-zheng-bi-ji/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="SparkCore完整笔记">
+                        
+                        <span class="card-title">SparkCore完整笔记</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            SparkCore完整笔记
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-10-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/大数据/" class="post-category" target="_blank">
+                                    大数据
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/SparkCore/" target="_blank">
+                        <span class="chip bg-color">SparkCore</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: BJUT-Swenchao<br />'
+            + '作者: 文超<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () { bodyElement.removeChild(newdiv); }, 200);
+    });
+</script>
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2019 Wenchao. All Rights Reserved.
+
+            
+            &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+            <span class="white-color">174.9k</span>
+            
+
+            <br>
+            <span id="sitetime"></span>
+
+            
+            
+            <br>
+            
+            
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/Swenchao" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:scwrite678@outlook.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+    <a href="https://user.qzone.qq.com/707708540" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+    $(document).ready(function () {
+
+        var int = setInterval(fixCount, 50);
+        var pvcountOffset = 80000;
+        var uvcountOffset = 20000;
+
+        function fixCount() {
+            if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + pvcountOffset);
+                clearInterval(int);
+            }
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + uvcountOffset); // 加上初始数据 
+                clearInterval(int);
+            }
+        }
+    });
+</script>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+        var t1 = Date.UTC(2020, 02, 18, 00, 00, 00); //北京时间2018-2-13 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "Σ(っ °Д °;)っ喔哟，崩溃啦！", clearTimeout(st)) : (document.title = "φ(゜▽゜*)♪咦，又好了！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) })
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', '');
+</script>
+
+
+
+    
+    <script src="/libs/others/clicklove.js"></script>
+    
+
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    <!-- 雪花特效 -->
+    
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-shizuku"},"display":{"position":"left","width":200,"height":400},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+
+</html>

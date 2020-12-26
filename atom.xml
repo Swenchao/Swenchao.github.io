@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>BJUT-Swenchao</title>
+  
+  <subtitle>文超</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2020-11-29T11:12:02.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>文超</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hive自定义函数</title>
+    <link href="http://yoursite.com/2020/11/29/hive-zi-ding-yi-han-shu/"/>
+    <id>http://yoursite.com/2020/11/29/hive-zi-ding-yi-han-shu/</id>
+    <published>2020-11-29T11:09:55.000Z</published>
+    <updated>2020-11-29T11:12:02.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hive&quot;&gt;&lt;a href=&quot;#Hive&quot; class=&quot;headerlink&quot; title=&quot;Hive&quot;&gt;&lt;/a&gt;Hive&lt;/h1&gt;&lt;h2 id=&quot;函数&quot;&gt;&lt;a href=&quot;#函数&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hive查询</title>
+    <link href="http://yoursite.com/2020/11/26/hive-cha-xun/"/>
+    <id>http://yoursite.com/2020/11/26/hive-cha-xun/</id>
+    <published>2020-11-26T06:42:19.000Z</published>
+    <updated>2020-11-26T06:45:12.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hive&quot;&gt;&lt;a href=&quot;#Hive&quot; class=&quot;headerlink&quot; title=&quot;Hive&quot;&gt;&lt;/a&gt;Hive&lt;/h1&gt;&lt;h2 id=&quot;查询&quot;&gt;&lt;a href=&quot;#查询&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hive DML数据操作</title>
+    <link href="http://yoursite.com/2020/11/23/hive-dml-shu-ju-cao-zuo/"/>
+    <id>http://yoursite.com/2020/11/23/hive-dml-shu-ju-cao-zuo/</id>
+    <published>2020-11-23T06:35:57.000Z</published>
+    <updated>2020-11-29T09:24:30.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hive&quot;&gt;&lt;a href=&quot;#Hive&quot; class=&quot;headerlink&quot; title=&quot;Hive&quot;&gt;&lt;/a&gt;Hive&lt;/h1&gt;&lt;h2 id=&quot;DML-数据操作&quot;&gt;&lt;a href=&quot;#DML-数据操作&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hive DDL数据定义</title>
+    <link href="http://yoursite.com/2020/11/18/hive-ddl-shu-ju-ding-yi/"/>
+    <id>http://yoursite.com/2020/11/18/hive-ddl-shu-ju-ding-yi/</id>
+    <published>2020-11-18T12:21:38.000Z</published>
+    <updated>2020-11-18T12:28:28.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hive&quot;&gt;&lt;a href=&quot;#Hive&quot; class=&quot;headerlink&quot; title=&quot;Hive&quot;&gt;&lt;/a&gt;Hive&lt;/h1&gt;&lt;h2 id=&quot;DDL-数据定义&quot;&gt;&lt;a href=&quot;#DDL-数据定义&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hive数据类型</title>
+    <link href="http://yoursite.com/2020/11/10/hive-shu-ju-lei-xing/"/>
+    <id>http://yoursite.com/2020/11/10/hive-shu-ju-lei-xing/</id>
+    <published>2020-11-10T12:11:07.000Z</published>
+    <updated>2020-11-18T12:14:48.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hive&quot;&gt;&lt;a href=&quot;#Hive&quot; class=&quot;headerlink&quot; title=&quot;Hive&quot;&gt;&lt;/a&gt;Hive&lt;/h1&gt;&lt;h2 id=&quot;Hive-数据类型&quot;&gt;&lt;a href=&quot;#Hive-数据类型&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hive安装配置</title>
+    <link href="http://yoursite.com/2020/11/06/hive-an-zhuang-pei-zhi/"/>
+    <id>http://yoursite.com/2020/11/06/hive-an-zhuang-pei-zhi/</id>
+    <published>2020-11-06T13:37:17.000Z</published>
+    <updated>2020-11-06T13:45:04.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hive&quot;&gt;&lt;a href=&quot;#Hive&quot; class=&quot;headerlink&quot; title=&quot;Hive&quot;&gt;&lt;/a&gt;Hive&lt;/h1&gt;&lt;h2 id=&quot;Hive安装&quot;&gt;&lt;a href=&quot;#Hive安装&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>时间很匆忙</title>
+    <link href="http://yoursite.com/2020/11/01/shi-jian-hen-cong-mang/"/>
+    <id>http://yoursite.com/2020/11/01/shi-jian-hen-cong-mang/</id>
+    <published>2020-11-01T12:53:07.000Z</published>
+    <updated>2020-11-06T14:39:08.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;时间很匆忙&quot;&gt;&lt;a href=&quot;#时间很匆忙&quot; class=&quot;headerlink&quot; title=&quot;时间很匆忙&quot;&gt;&lt;/a&gt;时间很匆忙&lt;/h1&gt;&lt;h2 id=&quot;废话连篇&quot;&gt;&lt;a href=&quot;#废话连篇&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="随笔" scheme="http://yoursite.com/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hive概述</title>
+    <link href="http://yoursite.com/2020/11/01/hive-gai-shu/"/>
+    <id>http://yoursite.com/2020/11/01/hive-gai-shu/</id>
+    <published>2020-11-01T07:29:13.000Z</published>
+    <updated>2020-11-01T07:41:56.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hive&quot;&gt;&lt;a href=&quot;#Hive&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Hive" scheme="http://yoursite.com/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark知识点</title>
+    <link href="http://yoursite.com/2020/10/22/spark-zhi-shi-dian/"/>
+    <id>http://yoursite.com/2020/10/22/spark-zhi-shi-dian/</id>
+    <published>2020-10-22T12:37:16.000Z</published>
+    <updated>2020-10-22T12:58:02.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;其中有些题目是刷到知乎上一个人整理的，感觉挺好的。但是当初没有保存地址（图片上有水印，可以去搜一下）&lt;/p&gt;
+&lt;h1 id=&quot;Spark知识点&quot;&gt;&lt;a href=&quot;#Spark知识点&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Spark知识点" scheme="http://yoursite.com/tags/Spark%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SparkStreaming</title>
+    <link href="http://yoursite.com/2020/10/06/sparkstreaming/"/>
+    <id>http://yoursite.com/2020/10/06/sparkstreaming/</id>
+    <published>2020-10-06T08:44:46.000Z</published>
+    <updated>2020-10-21T09:03:02.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;SparkStreaming&quot;&gt;&lt;a href=&quot;#SparkStreaming&quot; class=&quot;headerlink&quot; title=&quot;SparkStreaming&quot;&gt;&lt;/a&gt;SparkStreaming&lt;/h1&gt;&lt;h2
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkStreaming" scheme="http://yoursite.com/tags/SparkStreaming/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SparkSQL</title>
+    <link href="http://yoursite.com/2020/10/06/sparksql/"/>
+    <id>http://yoursite.com/2020/10/06/sparksql/</id>
+    <published>2020-10-06T08:38:40.000Z</published>
+    <updated>2020-10-21T09:03:12.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;SparkSQL&quot;&gt;&lt;a href=&quot;#SparkSQL&quot; class=&quot;headerlink&quot; title=&quot;SparkSQL&quot;&gt;&lt;/a&gt;SparkSQL&lt;/h1&gt;&lt;h2 id=&quot;Spark-SQL概述&quot;&gt;&lt;a href=&quot;#Spark-SQL概述&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkSQL" scheme="http://yoursite.com/tags/SparkSQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SparkCore完整笔记</title>
+    <link href="http://yoursite.com/2020/10/05/sparkcore-wan-zheng-bi-ji/"/>
+    <id>http://yoursite.com/2020/10/05/sparkcore-wan-zheng-bi-ji/</id>
+    <published>2020-10-05T02:14:58.000Z</published>
+    <updated>2020-10-21T09:01:20.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;SparkCore笔记全部整理完了，在这传个完整版。&lt;/p&gt;
+&lt;h1 id=&quot;SparkCore&quot;&gt;&lt;a href=&quot;#SparkCore&quot; class=&quot;headerlink&quot; title=&quot;SparkCore&quot;&gt;&lt;/a&gt;SparkCore&lt;/h1&gt;&lt;h2
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkCore" scheme="http://yoursite.com/tags/SparkCore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark-SparkCore-RDD编程进阶及补充（SparkCore系列五）</title>
+    <link href="http://yoursite.com/2020/10/05/spark-sparkcore-rdd-bian-cheng-jin-jie-ji-bu-chong-sparkcore-xi-lie-wu/"/>
+    <id>http://yoursite.com/2020/10/05/spark-sparkcore-rdd-bian-cheng-jin-jie-ji-bu-chong-sparkcore-xi-lie-wu/</id>
+    <published>2020-10-05T02:06:42.000Z</published>
+    <updated>2020-10-21T09:02:42.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;SparkCore&quot;&gt;&lt;a href=&quot;#SparkCore&quot; class=&quot;headerlink&quot; title=&quot;SparkCore&quot;&gt;&lt;/a&gt;SparkCore&lt;/h1&gt;&lt;h2 id=&quot;RDD编程进阶&quot;&gt;&lt;a href=&quot;#RDD编程进阶&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkCore" scheme="http://yoursite.com/tags/SparkCore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark-SparkCore-数据读取与保存（SparkCore系列四）</title>
+    <link href="http://yoursite.com/2020/10/04/spark-sparkcore-shu-ju-du-qu-yu-bao-cun-sparkcore-xi-lie-si/"/>
+    <id>http://yoursite.com/2020/10/04/spark-sparkcore-shu-ju-du-qu-yu-bao-cun-sparkcore-xi-lie-si/</id>
+    <published>2020-10-04T13:38:14.000Z</published>
+    <updated>2020-10-21T09:02:34.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;SparkCore&quot;&gt;&lt;a href=&quot;#SparkCore&quot; class=&quot;headerlink&quot; title=&quot;SparkCore&quot;&gt;&lt;/a&gt;SparkCore&lt;/h1&gt;&lt;h2 id=&quot;数据读取与保存&quot;&gt;&lt;a href=&quot;#数据读取与保存&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkCore" scheme="http://yoursite.com/tags/SparkCore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark-SparkCore-键值对RDD数据分区器（SparkCore系列三）</title>
+    <link href="http://yoursite.com/2020/10/03/spark-sparkcore-jian-zhi-dui-rdd-shu-ju-fen-qu-qi-sparkcore-xi-lie-san/"/>
+    <id>http://yoursite.com/2020/10/03/spark-sparkcore-jian-zhi-dui-rdd-shu-ju-fen-qu-qi-sparkcore-xi-lie-san/</id>
+    <published>2020-10-03T13:34:42.000Z</published>
+    <updated>2020-10-21T09:02:22.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;SparkCore&quot;&gt;&lt;a href=&quot;#SparkCore&quot; class=&quot;headerlink&quot; title=&quot;SparkCore&quot;&gt;&lt;/a&gt;SparkCore&lt;/h1&gt;&lt;h2 id=&quot;键值对RDD数据分区器&quot;&gt;&lt;a href=&quot;#键值对RDD数据分区器&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkCore" scheme="http://yoursite.com/tags/SparkCore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark-SparkCore-RDD编程（SparkCore系列二）</title>
+    <link href="http://yoursite.com/2020/10/03/spark-sparkcore-rdd-bian-cheng-sparkcore-xi-lie-er/"/>
+    <id>http://yoursite.com/2020/10/03/spark-sparkcore-rdd-bian-cheng-sparkcore-xi-lie-er/</id>
+    <published>2020-10-03T09:02:55.000Z</published>
+    <updated>2020-10-21T09:02:16.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;SparkCore&quot;&gt;&lt;a href=&quot;#SparkCore&quot; class=&quot;headerlink&quot; title=&quot;SparkCore&quot;&gt;&lt;/a&gt;SparkCore&lt;/h1&gt;&lt;h2 id=&quot;RDD编程&quot;&gt;&lt;a href=&quot;#RDD编程&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkCore" scheme="http://yoursite.com/tags/SparkCore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark-SparkCore-概述（SparkCore系列一）</title>
+    <link href="http://yoursite.com/2020/09/24/spark-sparkcore-gai-shu-sparkcore-xi-lie-yi/"/>
+    <id>http://yoursite.com/2020/09/24/spark-sparkcore-gai-shu-sparkcore-xi-lie-yi/</id>
+    <published>2020-09-24T11:02:55.000Z</published>
+    <updated>2020-10-21T09:01:58.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;SparkCore&quot;&gt;&lt;a href=&quot;#SparkCore&quot; class=&quot;headerlink&quot; title=&quot;SparkCore&quot;&gt;&lt;/a&gt;SparkCore&lt;/h1&gt;&lt;h2 id=&quot;JAVA-IO&quot;&gt;&lt;a href=&quot;#JAVA-IO&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="SparkCore" scheme="http://yoursite.com/tags/SparkCore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark运行模式</title>
+    <link href="http://yoursite.com/2020/09/21/spark-yun-xing-mo-shi-spark-xi-lie-er/"/>
+    <id>http://yoursite.com/2020/09/21/spark-yun-xing-mo-shi-spark-xi-lie-er/</id>
+    <published>2020-09-21T13:36:33.000Z</published>
+    <updated>2020-10-21T09:26:12.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Spark&quot;&gt;&lt;a href=&quot;#Spark&quot; class=&quot;headerlink&quot; title=&quot;Spark&quot;&gt;&lt;/a&gt;Spark&lt;/h1&gt;&lt;h2 id=&quot;Spark-运行模式&quot;&gt;&lt;a href=&quot;#Spark-运行模式&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Spark" scheme="http://yoursite.com/tags/Spark/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark概述（Spark系列一）</title>
+    <link href="http://yoursite.com/2020/09/21/spark-gai-shu-spark-xi-lie-yi/"/>
+    <id>http://yoursite.com/2020/09/21/spark-gai-shu-spark-xi-lie-yi/</id>
+    <published>2020-09-21T13:30:11.000Z</published>
+    <updated>2020-10-21T09:04:10.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;要开始学习Spark了，准备开启新的一系列了，一切顺利呀~&lt;/p&gt;
+&lt;h1 id=&quot;Spark&quot;&gt;&lt;a href=&quot;#Spark&quot; class=&quot;headerlink&quot; title=&quot;Spark&quot;&gt;&lt;/a&gt;Spark&lt;/h1&gt;&lt;h2 id=&quot;Spark概述&quot;&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Spark" scheme="http://yoursite.com/tags/Spark/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spark完整版笔记</title>
+    <link href="http://yoursite.com/2020/09/21/spark-wan-zheng-bi-ji/"/>
+    <id>http://yoursite.com/2020/09/21/spark-wan-zheng-bi-ji/</id>
+    <published>2020-09-21T13:30:11.000Z</published>
+    <updated>2020-10-21T09:07:56.000Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Spark&quot;&gt;&lt;a href=&quot;#Spark&quot; class=&quot;headerlink&quot; title=&quot;Spark&quot;&gt;&lt;/a&gt;Spark&lt;/h1&gt;&lt;h2 id=&quot;Spark概述&quot;&gt;&lt;a href=&quot;#Spark概述&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Spark" scheme="http://yoursite.com/tags/Spark/"/>
+    
+  </entry>
+  
+</feed>
