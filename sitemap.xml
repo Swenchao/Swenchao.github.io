@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2021/01/08/flink-yun-xing-jia-gou/</loc>
+    
+    <lastmod>2021-01-08T10:11:52.161Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/09/06/hadoop-mapreduce-wan-zheng-ban-bi-ji/</loc>
     
     <lastmod>2020-12-26T13:18:23.793Z</lastmod>
@@ -492,14 +499,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/archives/index.html</loc>
+    <loc>http://yoursite.com/categories/index.html</loc>
     
     <lastmod>2020-02-20T09:03:28.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/categories/index.html</loc>
+    <loc>http://yoursite.com/archives/index.html</loc>
     
     <lastmod>2020-02-20T09:03:28.000Z</lastmod>
     
