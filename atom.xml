@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-01-08T10:11:52.161Z</updated>
+  <updated>2021-04-18T08:32:24.163Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Flink 流处理 API</title>
+    <link href="http://yoursite.com/2021/04/18/flink-liu-chu-li-api/"/>
+    <id>http://yoursite.com/2021/04/18/flink-liu-chu-li-api/</id>
+    <published>2021-04-18T08:29:54.000Z</published>
+    <updated>2021-04-18T08:32:24.163Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Flink&quot;&gt;&lt;a href=&quot;#Flink&quot; class=&quot;headerlink&quot; title=&quot;Flink&quot;&gt;&lt;/a&gt;Flink&lt;/h1&gt;&lt;h2 id=&quot;Flink-流处理-API&quot;&gt;&lt;a href=&quot;#Flink-流处理-API&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Flink" scheme="http://yoursite.com/tags/Flink/"/>
+    
+  </entry>
   
   <entry>
     <title>Flink运行架构</title>
@@ -500,32 +526,6 @@
         
         
           &lt;h1 id=&quot;Spark&quot;&gt;&lt;a href=&quot;#Spark&quot; class=&quot;headerlink&quot; title=&quot;Spark&quot;&gt;&lt;/a&gt;Spark&lt;/h1&gt;&lt;h2 id=&quot;Spark-运行模式&quot;&gt;&lt;a href=&quot;#Spark-运行模式&quot; class=&quot;headerlink&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-    
-      <category term="Spark" scheme="http://yoursite.com/tags/Spark/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Spark完整版笔记</title>
-    <link href="http://yoursite.com/2020/09/21/spark-wan-zheng-bi-ji/"/>
-    <id>http://yoursite.com/2020/09/21/spark-wan-zheng-bi-ji/</id>
-    <published>2020-09-21T13:30:11.000Z</published>
-    <updated>2020-10-21T09:07:56.000Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;Spark&quot;&gt;&lt;a href=&quot;#Spark&quot; class=&quot;headerlink&quot; title=&quot;Spark&quot;&gt;&lt;/a&gt;Spark&lt;/h1&gt;&lt;h2 id=&quot;Spark概述&quot;&gt;&lt;a href=&quot;#Spark概述&quot; class=&quot;headerlink&quot;
         
       
     
