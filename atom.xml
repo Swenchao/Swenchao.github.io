@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-04-18T08:32:24.163Z</updated>
+  <updated>2021-05-09T12:29:03.996Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Flink-Window</title>
+    <link href="http://yoursite.com/2021/05/09/flink-window/"/>
+    <id>http://yoursite.com/2021/05/09/flink-window/</id>
+    <published>2021-05-09T12:20:36.000Z</published>
+    <updated>2021-05-09T12:29:03.996Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Flink&quot;&gt;&lt;a href=&quot;#Flink&quot; class=&quot;headerlink&quot; title=&quot;Flink&quot;&gt;&lt;/a&gt;Flink&lt;/h1&gt;&lt;h2 id=&quot;Flink-中的-window&quot;&gt;&lt;a href=&quot;#Flink-中的-window&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="Flink" scheme="http://yoursite.com/tags/Flink/"/>
+    
+  </entry>
   
   <entry>
     <title>Flink 流处理 API</title>
@@ -509,32 +535,6 @@
     
     
       <category term="SparkCore" scheme="http://yoursite.com/tags/SparkCore/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Spark运行模式</title>
-    <link href="http://yoursite.com/2020/09/21/spark-yun-xing-mo-shi-spark-xi-lie-er/"/>
-    <id>http://yoursite.com/2020/09/21/spark-yun-xing-mo-shi-spark-xi-lie-er/</id>
-    <published>2020-09-21T13:36:33.000Z</published>
-    <updated>2020-10-21T09:26:12.000Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;Spark&quot;&gt;&lt;a href=&quot;#Spark&quot; class=&quot;headerlink&quot; title=&quot;Spark&quot;&gt;&lt;/a&gt;Spark&lt;/h1&gt;&lt;h2 id=&quot;Spark-运行模式&quot;&gt;&lt;a href=&quot;#Spark-运行模式&quot; class=&quot;headerlink&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="大数据" scheme="http://yoursite.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-    
-      <category term="Spark" scheme="http://yoursite.com/tags/Spark/"/>
     
   </entry>
   
