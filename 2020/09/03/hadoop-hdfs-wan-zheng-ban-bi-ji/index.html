@@ -1,0 +1,2377 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Hadoop-HDFS完整版笔记, BJUT BigData 文超 Swenchao 深度学习">
+    <meta name="baidu-site-verification" content>
+    <meta name="google-site-verification" content>
+    <meta name="360-site-verification" content>
+    <meta name="description" content="HDFS概述感觉不是很重要，文件块大小那节要明白，其他稍微了解下就可以了~
+产生背景及定义
+优缺点
+
+组成架构（之前概述讲过 ）
+
+文件块大小
+注：文件块不能设置太小也不能设置太大。因为如果设置太小，会增加寻址时间，程序会一直在寻找块开始的">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Hadoop-HDFS完整版笔记 | BJUT-Swenchao</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    <style type="text/css">
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <span class="logo-span">BJUT-Swenchao</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <span>关于</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <div class="logo-name">BJUT-Swenchao</div>
+        <div class="logo-desc">
+            
+            北京工业大学 | 软件工程 | 大数据
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                关于
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-link"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Swenchao" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Swenchao" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        Hadoop-HDFS完整版笔记
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                        <a href="/tags/Hadoop-HDFS/" target="_blank">
+                            <span class="chip bg-color">Hadoop-HDFS</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                        <a href="/categories/大数据/" class="post-category" target="_blank">
+                            大数据
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-09-03
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                    文超
+                    
+                </div>
+
+                
+                
+                <div class="info-break-policy">
+                    <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    9.3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    42 分
+                </div>
+                
+                
+
+                
+                <div id="busuanzi_container_page_pv" class="info-break-policy">
+                    <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                    <span id="busuanzi_value_page_pv"></span>
+                </div>
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a>HDFS</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>感觉不是很重要，文件块大小那节要明白，其他稍微了解下就可以了~</p>
+<h3 id="产生背景及定义"><a href="#产生背景及定义" class="headerlink" title="产生背景及定义"></a>产生背景及定义</h3><p><img src="d:%5Cscwri%5CDesktop%5C1.png" alt></p>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p><img src="d:%5Cscwri%5CDesktop%5C2.png" alt="优点"></p>
+<p><img src="d:%5Cscwri%5CDesktop%5C3.png" alt="缺点"></p>
+<h3 id="组成架构（之前概述讲过-）"><a href="#组成架构（之前概述讲过-）" class="headerlink" title="组成架构（之前概述讲过 ）"></a>组成架构（之前概述讲过 ）</h3><p><img src="d:%5Cscwri%5CDesktop%5C4.png" alt></p>
+<p><img src="d:%5Cscwri%5CDesktop%5C5.png" alt></p>
+<h3 id="文件块大小"><a href="#文件块大小" class="headerlink" title="文件块大小"></a>文件块大小</h3><p><img src="d:%5Cscwri%5CDesktop%5C6.png" alt></p>
+<p><strong>注：文件块不能设置太小也不能设置太大。因为如果设置太小，会增加寻址时间，程序会一直在寻找块开始的位置；若块设置太大，从磁盘传输数据的时间会明显大于定位这个块开始位置所需的时间。HDFS块的大小设置主要取决于磁盘的传输速率</strong></p>
+<h2 id="HDFS-的-Shell-操作"><a href="#HDFS-的-Shell-操作" class="headerlink" title="HDFS 的 Shell 操作"></a>HDFS 的 Shell 操作</h2><p>1．基本语法</p>
+<pre><code>bin/hadoop fs 具体命令   OR  bin/hdfs dfs 具体命令</code></pre><p>dfs是fs的实现类。</p>
+<p>2．命令大全</p>
+<p>可通过如下命令进行查看</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>3．常用命令实操</p>
+<p>（1）启动Hadoop集群（方便后续的测试）</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ sbin/start-dfs.sh
+    [user_test@hadoop103 hadoop-2.7.2]$ sbin/start-yarn.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（2）-help：查询命令参数及功能</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -help rm<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（3）-ls: 显示目录信息</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -ls /<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>递归查看</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -lsr /
+    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -ls -R /<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（4）-mkdir：在HDFS上创建目录</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -mkdir -p /user/test/input<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（5）-moveFromLocal：从本地剪切粘贴到HDFS</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ touch test.txt
+    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs  -moveFromLocal test.txt  /user/test/input<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>往 test.txt 文件中输入任意内容，等会测试追加</p>
+<p>（6）-appendToFile：追加一个文件到已经存在的文件末尾</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ touch testAppend.txt
+    [user_test@hadoop102 hadoop-2.7.2]$ vim testAppend.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>输入任意内容</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -appendToFile testAppend.txt /user/test/input/test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（7）-cat：显示文件内容</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -cat /user/test/input/kongtest.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（8）-chgrp 、-chmod、-chown：Linux文件系统中的用法一样，修改文件所属权限</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs  -chmod  666 /user/test/input/test.txt
+[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs  -chown  user_test:user   /user/test/input/test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（9）-copyFromLocal：从本地文件系统中拷贝文件到HDFS路径去</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -copyFromLocal README.txt /<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（10）-copyToLocal：从HDFS拷贝到本地</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -copyToLocal /user/test/input/test.txt ./<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（11）-cp ：从HDFS的一个路径拷贝到HDFS的另一个路径</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -cp /user/test/input/test.txt /user/test/input<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（12）-mv：在HDFS目录中移动文件</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -mv /user/test/input/test.txt /<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（13）-get：等同于copyToLocal，就是从HDFS下载文件到本地</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -get /user/test/input/test.txt ./<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（14）-getmerge：合并下载多个文件，比如HDFS的目录 /user/user_test/test下有多个文件:log.1, log.2,log.3,…</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -getmerge /user/user_test/test/* ./merge.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（15）-put：等同于copyFromLocal</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -put ./merge.txt /user/test/input/<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（16）-tail：显示一个文件的末尾</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -tail /user/test/input/test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（17）-rm：删除文件或文件夹</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -rm /user/test/input/merge.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（18）-rmdir：删除空目录</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -mkdir /test_null
+    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -rmdir /test_null<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（19）-du统计文件夹的大小信息</p>
+<p>统计整个文件大小</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -du -s -h /user/test/input<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>——&gt; 2.7 K</code></pre><p>分别列出大小</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -du -h /user/test/input<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>——&gt;
+2.1.3 K  /user/test/input/README.txt
+15     /user/test/input/jinlian.txt
+1.4 K  /user/test/input/zaiyiqi.txt</code></pre><p>（20）-setrep：设置HDFS中文件的副本数量</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    [user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -setrep 10 /user/test/input/test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><strong>这里设置的副本数只是记录在NameNode的元数据中，是否真的会有这么多副本，还得看DataNode的数量。因为目前只有3台设备，最多也就3个副本，只有节点数的增加到10台时，副本数才能达到10。</strong></p>
+<h2 id="HDFS客户端环境"><a href="#HDFS客户端环境" class="headerlink" title="HDFS客户端环境"></a>HDFS客户端环境</h2><h3 id="HDFS客户端环境准备"><a href="#HDFS客户端环境准备" class="headerlink" title="HDFS客户端环境准备"></a>HDFS客户端环境准备</h3><p>1．根据自己电脑的操作系统选择对应的编译后的hadoop jar包保存到非中文路径下（例如：D:\nonblank\hadoop-2.7.2）</p>
+<p>2．配置HADOOP_HOME环境变量</p>
+<p><img src="1.png" alt></p>
+<ol start="3">
+<li>配置Path环境变量</li>
+</ol>
+<p><img src="2.png" alt></p>
+<p>4．创建一个Maven工程HdfsClientDemo</p>
+<p>5．导入相应的依赖并添加日志</p>
+<p>（1）导入依赖</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token operator">&lt;</span>dependencies<span class="token operator">></span>
+    <span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+        <span class="token operator">&lt;</span>groupId<span class="token operator">></span>junit<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>junit<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>version<span class="token operator">></span>RELEASE<span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+    <span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+        <span class="token operator">&lt;</span>groupId<span class="token operator">></span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>logging<span class="token punctuation">.</span>log4j<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>log4j<span class="token operator">-</span>core<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">2.8</span><span class="token punctuation">.</span><span class="token number">2</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+    <span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+        <span class="token operator">&lt;</span>groupId<span class="token operator">></span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>hadoop<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>hadoop<span class="token operator">-</span>common<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">2.7</span><span class="token punctuation">.</span><span class="token number">2</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+    <span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+        <span class="token operator">&lt;</span>groupId<span class="token operator">></span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>hadoop<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>hadoop<span class="token operator">-</span>client<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">2.7</span><span class="token punctuation">.</span><span class="token number">2</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+    <span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+        <span class="token operator">&lt;</span>groupId<span class="token operator">></span>org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>hadoop<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>hadoop<span class="token operator">-</span>hdfs<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">2.7</span><span class="token punctuation">.</span><span class="token number">2</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+    <span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+        <span class="token operator">&lt;</span>groupId<span class="token operator">></span>jdk<span class="token punctuation">.</span>tools<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>jdk<span class="token punctuation">.</span>tools<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+        <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">1.8</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+        <span class="token operator">&lt;</span>scope<span class="token operator">></span>system<span class="token operator">&lt;</span><span class="token operator">/</span>scope<span class="token operator">></span>
+        <span class="token operator">&lt;</span>systemPath<span class="token operator">></span>$<span class="token punctuation">{</span>JAVA_HOME<span class="token punctuation">}</span><span class="token operator">/</span>lib<span class="token operator">/</span>tools<span class="token punctuation">.</span>jar<span class="token operator">&lt;</span><span class="token operator">/</span>systemPath<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependencies<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）添加日志相关</p>
+<p>在src/main/resources目录下，新建一个文件，命名为“log4j.properties”，填写如下内容：</p>
+<pre><code>log4j.rootLogger=INFO, stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n
+log4j.appender.logfile=org.apache.log4j.FileAppender
+log4j.appender.logfile.File=target/spring.log
+log4j.appender.logfile.layout=org.apache.log4j.PatternLayout
+log4j.appender.logfile.layout.ConversionPattern=%d %p [%c] - %m%n</code></pre><p>6．创建包名：bigdata.hadoop.hdfs</p>
+<p>7．创建HdfsClient类</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HdfsClient</span><span class="token punctuation">{</span>    
+
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testMkdirs</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+        Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 配置在集群上运行(方式1)</span>
+        <span class="token comment" spellcheck="true">// configuration.set("fs.defaultFS", "hdfs://hadoop102:9000");</span>
+        <span class="token comment" spellcheck="true">// FileSystem fs = FileSystem.get(configuration);</span>
+
+        <span class="token comment" spellcheck="true">// 方式2(其中user_test为用户名)</span>
+        FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 2 创建目录</span>
+        fs<span class="token punctuation">.</span><span class="token function">mkdirs</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/user_test/test/sc"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 3 关闭资源</span>
+        fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>8．执行程序</p>
+<p>方式1运行时需要配置用户名称</p>
+<p><img src="3.png" alt></p>
+<p><img src="4.png" alt></p>
+<p>客户端去操作HDFS时，是有一个用户身份的。默认情况下，HDFS客户端API会从JVM中获取一个参数来作为自己的用户身份：-DHADOOP_USER_NAME=user_test，user_test为用户名称。</p>
+<h3 id="HDFS的API操作"><a href="#HDFS的API操作" class="headerlink" title="HDFS的API操作"></a>HDFS的API操作</h3><h4 id="HDFS文件上传（测试参数优先级）"><a href="#HDFS文件上传（测试参数优先级）" class="headerlink" title="HDFS文件上传（测试参数优先级）"></a>HDFS文件上传（测试参数优先级）</h4><p>1．编写源代码</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testCopyFromLocalFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException <span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    configuration<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"dfs.replication"</span><span class="token punctuation">,</span> <span class="token string">"2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 2 上传文件（第一个地址为本地的，第二个为hdfs上的地址）</span>
+    fs<span class="token punctuation">.</span><span class="token function">copyFromLocalFile</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 关闭资源</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"over"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2．将hdfs-site.xml拷贝到项目的根目录下（配置文件设置备份数量——这里是1）</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token prolog">&lt;?xml-stylesheet type="text/xsl" href="configuration.xsl"?></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.replication<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>*<em>注：<br>参数优先级排序：（1）客户端代码中设置的值 &gt;（2）ClassPath下的用户自定义配置文件 &gt;（3）服务器的默认配置<br>*</em></p>
+<h4 id="HDFS文件下载"><a href="#HDFS文件下载" class="headerlink" title="HDFS文件下载"></a>HDFS文件下载</h4><pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testCopyToLocalFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 2 执行下载操作(第一个地址是hdfs地址，第二个为本地地址)</span>
+    <span class="token comment" spellcheck="true">//可选参数</span>
+    <span class="token comment" spellcheck="true">// boolean delSrc 指是否将原文件删除</span>
+    <span class="token comment" spellcheck="true">// Path src 指要下载的文件路径</span>
+    <span class="token comment" spellcheck="true">// Path dst 指将文件下载到的路径</span>
+    <span class="token comment" spellcheck="true">// boolean useRawLocalFileSystem 是否开启文件校验（若不开启就会产生一个crc的校验文件）</span>
+    fs<span class="token punctuation">.</span><span class="token function">copyToLocalFile</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/loadFile/test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 关闭资源</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="HDFS文件夹删除"><a href="#HDFS文件夹删除" class="headerlink" title="HDFS文件夹删除"></a>HDFS文件夹删除</h4><pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testDelete</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 2 执行删除(第一个是要删除的地址；若是删除的是个路径，则第二个必须为true，文件则无所谓)</span>
+    fs<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/test"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 关闭资源</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="HDFS文件名更改"><a href="#HDFS文件名更改" class="headerlink" title="HDFS文件名更改"></a>HDFS文件名更改</h4><pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testRename</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+
+    <span class="token comment" spellcheck="true">// 2 修改文件名称(第一个为源文件名称，第二个为新文件名称)</span>
+    fs<span class="token punctuation">.</span><span class="token function">rename</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/loadFile/test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/loadFile/newTest.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 关闭资源</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="HDFS文件详情查看"><a href="#HDFS文件详情查看" class="headerlink" title="HDFS文件详情查看"></a>HDFS文件详情查看</h4><p>查看文件名称、权限、长度、块信息</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testListFiles</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+
+    <span class="token comment" spellcheck="true">// 2 获取文件详情(第二个参数为递归查看)</span>
+    RemoteIterator<span class="token operator">&lt;</span>LocatedFileStatus<span class="token operator">></span> listFiles <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">listFiles</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 遍历迭代器</span>
+    <span class="token keyword">while</span><span class="token punctuation">(</span>listFiles<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        LocatedFileStatus status <span class="token operator">=</span> listFiles<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 输出详情</span>
+        <span class="token comment" spellcheck="true">// 文件名称</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 长度</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">getLen</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 权限</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">getPermission</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 分组</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">getGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 获取存储的块信息</span>
+        BlockLocation<span class="token punctuation">[</span><span class="token punctuation">]</span> blockLocations <span class="token operator">=</span> status<span class="token punctuation">.</span><span class="token function">getBlockLocations</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>BlockLocation blockLocation <span class="token operator">:</span> blockLocations<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+            <span class="token comment" spellcheck="true">// 获取块存储的主机节点</span>
+            String<span class="token punctuation">[</span><span class="token punctuation">]</span> hosts <span class="token operator">=</span> blockLocation<span class="token punctuation">.</span><span class="token function">getHosts</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>String host <span class="token operator">:</span> hosts<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>host<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"------------------------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 3 关闭资源</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="HDFS文件和文件夹判断"><a href="#HDFS文件和文件夹判断" class="headerlink" title="HDFS文件和文件夹判断"></a>HDFS文件和文件夹判断</h4><pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testListStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件配置信息</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 2 判断是文件还是文件夹</span>
+    FileStatus<span class="token punctuation">[</span><span class="token punctuation">]</span> listStatus <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">listStatus</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>FileStatus fileStatus <span class="token operator">:</span> listStatus<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// 如果是文件</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>fileStatus<span class="token punctuation">.</span><span class="token function">isFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"f:"</span><span class="token operator">+</span>fileStatus<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"d:"</span><span class="token operator">+</span>fileStatus<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 3 关闭资源</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="HDFS的I-O流操作"><a href="#HDFS的I-O流操作" class="headerlink" title="HDFS的I/O流操作"></a>HDFS的I/O流操作</h3><p>上面api都是框架封装好的。现在可以尝试自己实现（我们可以采用IO流的方式实现数据的上传和下载）</p>
+<h4 id="HDFS文件上传"><a href="#HDFS文件上传" class="headerlink" title="HDFS文件上传"></a>HDFS文件上传</h4><p>1．需求：把本地的test.txt文件上传到HDFS根目录</p>
+<p>2．编写代码</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">putFileToHDFS</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException <span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 2 创建输入流</span>
+    FileInputStream fis <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 获取输出流</span>
+    FSDataOutputStream fos <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 4 流对拷</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">copyBytes</span><span class="token punctuation">(</span>fis<span class="token punctuation">,</span> fos<span class="token punctuation">,</span> configuration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 5 关闭资源</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fos<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="HDFS文件下载-1"><a href="#HDFS文件下载-1" class="headerlink" title="HDFS文件下载"></a>HDFS文件下载</h4><p>1．需求：从HDFS上下载test.txt文件到本地</p>
+<p>2．编写代码</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 文件下载</span>
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">getFileFromHDFS</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 输入流：写出的；输出流：写入的——在这个里面本地就是输出流，hdfs就是输出流</span>
+
+    <span class="token comment" spellcheck="true">// 2 获取输入流</span>
+    FSDataInputStream fis <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/loadFile/test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 获取输出流</span>
+    FileOutputStream fos <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"test.txt"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 4 流的对拷</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">copyBytes</span><span class="token punctuation">(</span>fis<span class="token punctuation">,</span> fos<span class="token punctuation">,</span> configuration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 5 关闭资源</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fos<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="文件定位读取"><a href="#文件定位读取" class="headerlink" title="文件定位读取"></a>文件定位读取</h4><p>1．需求：分块读取HDFS上的大文件，比如根目录下的/hadoop-2.7.2.tar.gz（首先手动将文件上传到hdfs——分成两块）</p>
+<p>2．编写代码</p>
+<pre class="line-numbers language-java"><code class="language-java">（<span class="token number">1</span>）下载第一块
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">readFileSeek1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 2 获取输入流</span>
+    FSDataInputStream fis <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/hadoop-2.7.2.tar.gz"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 创建输出流</span>
+    FileOutputStream fos <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"/hadoop-2.7.2.tar.gz.part1"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 4 流的拷贝（若还用copyBytes来拷贝，则是拷贝的全部）</span>
+    <span class="token comment" spellcheck="true">// 相当与1k</span>
+    <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> buf <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">byte</span><span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 读取128M</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span><span class="token number">0</span> <span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">128</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        fis<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        fos<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 5关闭资源</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fos<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-java"><code class="language-java">（<span class="token number">2</span>）下载第二块
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">readFileSeek2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException<span class="token punctuation">,</span> URISyntaxException<span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 1 获取文件系统</span>
+    Configuration configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    FileSystem fs <span class="token operator">=</span> FileSystem<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">URI</span><span class="token punctuation">(</span><span class="token string">"hdfs://hadoop102:9000"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> configuration<span class="token punctuation">,</span> <span class="token string">"user_test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 2 打开输入流</span>
+    FSDataInputStream fis <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Path</span><span class="token punctuation">(</span><span class="token string">"/hadoop-2.7.2.tar.gz"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 3 定位输入数据位置(128M位置处)</span>
+    fis<span class="token punctuation">.</span><span class="token function">seek</span><span class="token punctuation">(</span><span class="token number">1024</span><span class="token operator">*</span><span class="token number">1024</span><span class="token operator">*</span><span class="token number">128</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 4 创建输出流</span>
+    FileOutputStream fos <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"/hadoop-2.7.2.tar.gz.part2"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 5 流的对拷</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">copyBytes</span><span class="token punctuation">(</span>fis<span class="token punctuation">,</span> fos<span class="token punctuation">,</span> configuration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// 6 关闭资源</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    IOUtils<span class="token punctuation">.</span><span class="token function">closeStream</span><span class="token punctuation">(</span>fos<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fs<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（3）合并文件</p>
+<p>在Window命令窗口中进入到下载文件目录下，然后执行命令，进行数据合并</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    type hadoop-2.7.2.tar.gz.part2 >> hadoop-2.7.2.tar.gz.part1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>合并完成后，将hadoop-2.7.2.tar.gz.part1重新命名为hadoop-2.7.2.tar.gz。</p>
+<h2 id="HDFS的数据流（面试重点）"><a href="#HDFS的数据流（面试重点）" class="headerlink" title="HDFS的数据流（面试重点）"></a>HDFS的数据流（面试重点）</h2><h3 id="HDFS写数据流程"><a href="#HDFS写数据流程" class="headerlink" title="HDFS写数据流程"></a>HDFS写数据流程</h3><h4 id="剖析文件写入"><a href="#剖析文件写入" class="headerlink" title="剖析文件写入"></a>剖析文件写入</h4><p>HDFS写数据流程，如下</p>
+<p><img src="1.png" alt></p>
+<p>1）客户端通过Distributed FileSystem模块向NameNode请求上传文件，NameNode检查目标文件是否已存在，父目录是否存在。</p>
+<p>2）NameNode返回是否可以上传。</p>
+<p>3）客户端请求第一个 Block上传到哪几个DataNode服务器上。</p>
+<p>4）NameNode返回3个DataNode节点，分别为dn1、dn2、dn3（备份）。</p>
+<p>5）客户端通过FSDataOutputStream模块请求dn1上传数据，dn1收到请求会继续调用dn2，然后dn2调用dn3，将这个通信管道建立完成。</p>
+<p>6）dn1、dn2、dn3逐级应答客户端。</p>
+<p>7）客户端开始往dn1上传第一个Block（先从磁盘读取数据放到一个本地内存缓存），以Packet为单位，dn1收到一个Packet就会传给dn2，dn2传给dn3（这个过程是通过内存缓存来传的，因为速度快）；dn1每传一个packet会放入一个应答队列等待应答。</p>
+<p>8）当一个Block传输完成之后，客户端再次请求NameNode上传第二个Block的服务器。（重复执行3-7步）。</p>
+<h4 id="网络拓扑-节点距离计算"><a href="#网络拓扑-节点距离计算" class="headerlink" title="网络拓扑-节点距离计算"></a>网络拓扑-节点距离计算</h4><p>在HDFS写数据的过程中，NameNode会选择距离待上传数据最近距离的DataNode接收数据。</p>
+<p><strong>节点距离：两个节点到达最近的共同祖先的距离总和。</strong></p>
+<p><img src="2.png" alt></p>
+<h4 id="机架感知（副本存储节点选择）"><a href="#机架感知（副本存储节点选择）" class="headerlink" title="机架感知（副本存储节点选择）"></a>机架感知（副本存储节点选择）</h4><ol>
+<li>官方ip地址</li>
+</ol>
+<p>机架感知说明</p>
+<p><a href="http://hadoop.apache.org/docs/r2.7.2/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html#Data_Replication" target="_blank" rel="noopener">http://hadoop.apache.org/docs/r2.7.2/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html#Data_Replication</a></p>
+<p>For the common case, when the replication factor is three, HDFS’s placement policy is to put one replica on one node in the local rack, another on a different node in the local rack, and the last on a different node in a different rack.</p>
+<ol start="2">
+<li>Hadoop2.7.2副本节点选择</li>
+</ol>
+<p><img src="3.png" alt></p>
+<h3 id="HDFS读数据流程"><a href="#HDFS读数据流程" class="headerlink" title="HDFS读数据流程"></a>HDFS读数据流程</h3><p><img src="1.png" alt></p>
+<p>其中 ss.avi 有三个副本，每个副本有两块。</p>
+<p>1）客户端通过 Distributed FileSystem 向 NameNode 请求下载文件，NameNode通过查询元数据，找到文件块所在的DataNode地址。</p>
+<p>2）挑选一台 DataNode 服务器（就近原则），请求读取数据。若数据损坏，则选择一个副本来进行读取。</p>
+<p>3）DataNode 开始传输数据给客户端（从磁盘里面读取数据输入流，以 Packet 为单位来做校验）。</p>
+<p>4）客户端以 Packet 为单位接收，先在本地缓存，然后写入目标文件。</p>
+<h2 id="NameNode和SecondaryNameNode（面试开发重点）"><a href="#NameNode和SecondaryNameNode（面试开发重点）" class="headerlink" title="NameNode和SecondaryNameNode（面试开发重点）"></a>NameNode和SecondaryNameNode（面试开发重点）</h2><h3 id="NN和2NN工作机制"><a href="#NN和2NN工作机制" class="headerlink" title="NN和2NN工作机制"></a>NN和2NN工作机制</h3><p><strong>思考：NameNode中的元数据是存储在哪里的？</strong></p>
+<p>首先，我们做个假设，如果存储在NameNode节点的磁盘中，因为经常需要进行随机访问，还有响应客户请求，必然是效率过低。因此，元数据需要存放在内存中。但如果只存在内存中，一旦断电，元数据丢失，整个集群就无法工作了。因此产生在磁盘中备份元数据的FsImage。</p>
+<p>这样又会带来新的问题，当在内存中的元数据更新时，如果同时更新FsImage，就会导致效率过低，但如果不更新，就会发生一致性问题，一旦NameNode节点断电，就会产生数据丢失。因此，引入Edits文件(只进行追加操作，效率很高)。每当元数据有更新或者添加元数据时，修改内存中的元数据并追加到Edits中。这样，一旦NameNode节点断电，可以通过FsImage和Edits的合并，合成元数据。</p>
+<p>但是，如果长时间添加数据到Edits中，会导致该文件数据过大，效率降低，而且一旦断电，恢复元数据需要的时间过长。因此，需要定期进行FsImage和Edits的合并，如果这个操作由NameNode节点完成，又会效率过低。因此，引入一个新的节点SecondaryNamenode，专门用于FsImage和Edits的合并。</p>
+<p>NN和2NN工作机制，如下：</p>
+<p><img src="2.png" alt></p>
+<ol>
+<li>第一阶段：NameNode启动</li>
+</ol>
+<p>（1）第一次启动NameNode格式化后，创建Fsimage和Edits文件。如果不是第一次启动，直接加载编辑日志和镜像文件到内存。</p>
+<p>（2）客户端对元数据进行增删改的请求。</p>
+<p>（3）NameNode记录操作日志，更新滚动日志。</p>
+<p>（4）NameNode在内存中对数据进行增删改。</p>
+<p><strong>之所以先更新日志再进行操作，是因为如果先操作数据，未写日志突然断电，那么数据操作有可能丢失，无法还原。</strong></p>
+<ol start="2">
+<li>第二阶段：Secondary NameNode工作</li>
+</ol>
+<p>（1）Secondary NameNode 询问NameNode是否需要 CheckPoint。直接带回NameNode是否检查结果。<br>CheckPoint是一个检查点，检测是否需要合并日志文件和 fsimage 然后再序列化到 fsimge 中。</p>
+<p>（2）若触发条件满足了，则 Secondary NameNode 请求执行CheckPoint。</p>
+<p>（3）NameNode滚动正在编写的Edits日志，避免在合并的时候没法继续编写操作（001为原来的，然后新的日志先写到002中）。</p>
+<p>（4）将滚动前的编辑日志和镜像文件拷贝到 Secondary NameNode。</p>
+<p>（5）Secondary NameNode 加载编辑日志和镜像文件到内存，并合并。</p>
+<p>（6）生成新的镜像文件 fsimage.chkpoint。</p>
+<p>（7）拷贝 fsimage.chkpoint 到 NameNode。</p>
+<p>（8）NameNode 将 fsimage.chkpoint 重新命名成 fsimage（现在情况是002和新的镜像文件fsimage合起来就是当前内存中最新的内容）。</p>
+<p><strong>NN和2NN工作机制详解</strong></p>
+<p>Fsimage：NameNode内存中元数据序列化后形成的文件。</p>
+<p>Edits：记录客户端更新元数据信息的每一步操作（可通过Edits运算出元数据）。</p>
+<p>NameNode 启动时，先滚动Edits并生成一个空的 edits.inprogress，然后加载Edits和Fsimage 到内存中，此时 NameNode 内存就持有最新的元数据信息。</p>
+<p>Client 开始对NameNode 发送元数据的增删改的请求，这些请求的操作首先会被记录到edits.inprogress 中（查询元数据的操作不会被记录在Edits中，因为查询操作不会更改元数据信息），如果此时 NameNode 挂掉，重启后会从 Edits 中读取元数据的信息。然后，NameNode 会在内存中执行元数据的增删改的操作。</p>
+<p>由于 Edits 中记录的操作会越来越多，Edits文件会越来越大，导致NameNode在启动加载Edits时会很慢，所以需要对 Edits 和 Fsimage 进行合并（所谓合并，就是将Edits和Fsimage加载到内存中，照着Edits中的操作一步步执行，最终形成新的Fsimage）。</p>
+<p>SecondaryNameNode的作用就是帮助NameNode进行Edits和Fsimage的合并工作。<br>SecondaryNameNode首先会询问NameNode是否需要CheckPoint（触发CheckPoint需要满足两个条件中的任意一个，定时时间到和Edits中数据写满了）。直接带回NameNode是否检查结果。SecondaryNameNode执行CheckPoint操作，首先会让NameNode滚动Edits并生成一个空的edits.inprogress，滚动Edits的目的是给Edits打个标记，以后所有新的操作都写入edits.inprogress，其他未合并的Edits和Fsimage会拷贝到SecondaryNameNode的本地，然后将拷贝的Edits和Fsimage加载到内存中进行合并，生成fsimage.chkpoint，然后将fsimage.chkpoint拷贝给NameNode，重命名为Fsimage后替换掉原来的Fsimage。</p>
+<p>NameNode在启动时就只需要加载之前未合并的Edits和Fsimage即可，因为合并过的Edits中的元数据信息已经被记录在Fsimage中。</p>
+<h3 id="Fsimage和Edits解析"><a href="#Fsimage和Edits解析" class="headerlink" title="Fsimage和Edits解析"></a>Fsimage和Edits解析</h3><ol>
+<li>概念</li>
+</ol>
+<p><img src="3.png" alt></p>
+<ol start="2">
+<li>oiv查看Fsimage文件</li>
+</ol>
+<p>（1）查看oiv和oev命令</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 current]$ hdfs
+——>
+...
+oiv        apply the offline fsimage viewer to an fsimage
+oev        pply the offline edits viewer to an edits file
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）基本语法</p>
+<pre class="line-numbers language-shell"><code class="language-shell">hdfs oiv -p （要将 fsimage 转化成的格式） -i （镜像文件） -o （转换后文件输出路径）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（3）案例实操（其中文件名称可能有区别）</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 current]$ pwd
+——>
+/opt/module/hadoop-2.7.2/data/tmp/dfs/name/current
+
+[user_test@hadoop102 current]$ hdfs oiv -p XML -i fsimage_0000000000000000025 -o /opt/module/hadoop-2.7.2/fsimage.xml
+
+[user_test@hadoop102 current]$ cat /opt/module/hadoop-2.7.2/fsimage.xml<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>将显示的xml文件内容拷贝到idea中创建的xml文件中，并格式化。部分显示结果如下（代码信息会有所区别）。</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>inode</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>16386<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>type</span><span class="token punctuation">></span></span>DIRECTORY<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>type</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>user<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mtime</span><span class="token punctuation">></span></span>1512722284477<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mtime</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>permission</span><span class="token punctuation">></span></span>user_test:supergroup:rwxr-xr-x<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>permission</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>nsquota</span><span class="token punctuation">></span></span>-1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>nsquota</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dsquota</span><span class="token punctuation">></span></span>-1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dsquota</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>inode</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>inode</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>16387<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>type</span><span class="token punctuation">></span></span>DIRECTORY<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>type</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>user_test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mtime</span><span class="token punctuation">></span></span>1512790549080<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mtime</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>permission</span><span class="token punctuation">></span></span>user_test:supergroup:rwxr-xr-x<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>permission</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>nsquota</span><span class="token punctuation">></span></span>-1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>nsquota</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dsquota</span><span class="token punctuation">></span></span>-1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dsquota</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>inode</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>inode</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>16389<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>type</span><span class="token punctuation">></span></span>FILE<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>type</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>wc.input<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>replication</span><span class="token punctuation">></span></span>3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>replication</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mtime</span><span class="token punctuation">></span></span>1512722322219<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mtime</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>atime</span><span class="token punctuation">></span></span>1512722321610<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>atime</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>perferredBlockSize</span><span class="token punctuation">></span></span>134217728<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>perferredBlockSize</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>permission</span><span class="token punctuation">></span></span>user_test:supergroup:rw-r--r--<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>permission</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>blocks</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>block</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>1073741825<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>genstamp</span><span class="token punctuation">></span></span>1001<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>genstamp</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>numBytes</span><span class="token punctuation">></span></span>59<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>numBytes</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>block</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>blocks</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>inode</span> <span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>思考：可以看出，Fsimage中没有记录块所对应DataNode，为什么？</strong></p>
+<p>在集群启动后，要求DataNode上报数据块信息，并间隔一段时间后再次上报。（datanode运行机制会详细说）</p>
+<ol start="3">
+<li>oev查看Edits文件</li>
+</ol>
+<p>（1）基本语法</p>
+<pre class="line-numbers language-shell"><code class="language-shell">hdfs oev -p （要将 fsimage 转化成的格式） -i （镜像文件） -o （转换后文件输出路径）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（2）案例实操</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 current]$ hdfs oev -p XML -i edits_0000000000000000012-0000000000000000013 -o /opt/module/hadoop-2.7.2/edits.xml
+
+[user_test@hadoop102 current]$ cat /opt/module/hadoop-2.7.2/edits.xml<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>将显示的xml文件内容拷贝到 idea 中创建的xml文件中，并格式化。显示结果如下。</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>EDITS</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>EDITS_VERSION</span><span class="token punctuation">></span></span>-63<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>EDITS_VERSION</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RECORD</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OPCODE</span><span class="token punctuation">></span></span>OP_START_LOG_SEGMENT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OPCODE</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>DATA</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TXID</span><span class="token punctuation">></span></span>129<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TXID</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>DATA</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RECORD</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RECORD</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OPCODE</span><span class="token punctuation">></span></span>OP_ADD<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OPCODE</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>DATA</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TXID</span><span class="token punctuation">></span></span>130<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TXID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LENGTH</span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LENGTH</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>INODEID</span><span class="token punctuation">></span></span>16407<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>INODEID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>PATH</span><span class="token punctuation">></span></span>/hello7.txt<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>PATH</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>REPLICATION</span><span class="token punctuation">></span></span>2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>REPLICATION</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MTIME</span><span class="token punctuation">></span></span>1512943607866<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>MTIME</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ATIME</span><span class="token punctuation">></span></span>1512943607866<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ATIME</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>BLOCKSIZE</span><span class="token punctuation">></span></span>134217728<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>BLOCKSIZE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>CLIENT_NAME</span><span class="token punctuation">></span></span>DFSClient_NONMAPREDUCE_-1544295051_1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>CLIENT_NAME</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>CLIENT_MACHINE</span><span class="token punctuation">></span></span>192.168.1.5<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>CLIENT_MACHINE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OVERWRITE</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OVERWRITE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>PERMISSION_STATUS</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>USERNAME</span><span class="token punctuation">></span></span>user_test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>USERNAME</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>GROUPNAME</span><span class="token punctuation">></span></span>supergroup<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>GROUPNAME</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MODE</span><span class="token punctuation">></span></span>420<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>MODE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>PERMISSION_STATUS</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RPC_CLIENTID</span><span class="token punctuation">></span></span>908eafd4-9aec-4288-96f1-e8011d181561<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RPC_CLIENTID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RPC_CALLID</span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RPC_CALLID</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>DATA</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RECORD</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RECORD</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OPCODE</span><span class="token punctuation">></span></span>OP_ALLOCATE_BLOCK_ID<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OPCODE</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>DATA</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TXID</span><span class="token punctuation">></span></span>131<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TXID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>BLOCK_ID</span><span class="token punctuation">></span></span>1073741839<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>BLOCK_ID</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>DATA</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RECORD</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RECORD</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OPCODE</span><span class="token punctuation">></span></span>OP_SET_GENSTAMP_V2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OPCODE</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>DATA</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TXID</span><span class="token punctuation">></span></span>132<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TXID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>GENSTAMPV2</span><span class="token punctuation">></span></span>1016<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>GENSTAMPV2</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>DATA</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RECORD</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RECORD</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OPCODE</span><span class="token punctuation">></span></span>OP_ADD_BLOCK<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OPCODE</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>DATA</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TXID</span><span class="token punctuation">></span></span>133<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TXID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>PATH</span><span class="token punctuation">></span></span>/hello7.txt<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>PATH</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>BLOCK</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>BLOCK_ID</span><span class="token punctuation">></span></span>1073741839<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>BLOCK_ID</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>NUM_BYTES</span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>NUM_BYTES</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>GENSTAMP</span><span class="token punctuation">></span></span>1016<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>GENSTAMP</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>BLOCK</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RPC_CLIENTID</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RPC_CLIENTID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RPC_CALLID</span><span class="token punctuation">></span></span>-2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RPC_CALLID</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>DATA</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RECORD</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RECORD</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OPCODE</span><span class="token punctuation">></span></span>OP_CLOSE<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OPCODE</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>DATA</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TXID</span><span class="token punctuation">></span></span>134<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TXID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LENGTH</span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LENGTH</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>INODEID</span><span class="token punctuation">></span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>INODEID</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>PATH</span><span class="token punctuation">></span></span>/hello7.txt<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>PATH</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>REPLICATION</span><span class="token punctuation">></span></span>2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>REPLICATION</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MTIME</span><span class="token punctuation">></span></span>1512943608761<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>MTIME</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ATIME</span><span class="token punctuation">></span></span>1512943607866<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ATIME</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>BLOCKSIZE</span><span class="token punctuation">></span></span>134217728<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>BLOCKSIZE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>CLIENT_NAME</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>CLIENT_NAME</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>CLIENT_MACHINE</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>CLIENT_MACHINE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>OVERWRITE</span><span class="token punctuation">></span></span>false<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>OVERWRITE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>BLOCK</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>BLOCK_ID</span><span class="token punctuation">></span></span>1073741839<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>BLOCK_ID</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>NUM_BYTES</span><span class="token punctuation">></span></span>25<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>NUM_BYTES</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>GENSTAMP</span><span class="token punctuation">></span></span>1016<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>GENSTAMP</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>BLOCK</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>PERMISSION_STATUS</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>USERNAME</span><span class="token punctuation">></span></span>user_test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>USERNAME</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>GROUPNAME</span><span class="token punctuation">></span></span>supergroup<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>GROUPNAME</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MODE</span><span class="token punctuation">></span></span>420<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>MODE</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>PERMISSION_STATUS</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>DATA</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RECORD</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>EDITS</span> <span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>说明：</strong></p>
+<pre><code>OP_START_LOG_SEGMENT：日志开始
+OP_MKDIR：创建路径
+OP_ADD：上传文件
+OP_ALLOCATE_BLOCK_ID：分配块 id
+OP_SET_GENSTAMP_V2：创建时间戳
+OP_ADD_BLOCK：添加块信息
+OP_CLOSE：操作结束
+OP_RENAME_OLD：重命名原来复制的文件</code></pre><p><strong>思考：NameNode如何确定下次开机启动的时候合并哪些Edits？</strong></p>
+<p>根据 seen_txid 文件中数据来合并，其中记录了最新的。</p>
+<h3 id="CheckPoint时间设置"><a href="#CheckPoint时间设置" class="headerlink" title="CheckPoint时间设置"></a>CheckPoint时间设置</h3><p>（1）通常情况下，SecondaryNameNodec每隔一小时执行一次(3600秒)。</p>
+<p>配置文件：hdfs-default.xml</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.namenode.checkpoint.period<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>3600<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）一分钟检查一次操作次数，当操作次数达到1百万时，SecondaryNameNode 执行一次。</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.namenode.checkpoint.txns<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>1000000<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>description</span><span class="token punctuation">></span></span>操作动作次数<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>description</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.namenode.checkpoint.check.period<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>60<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>description</span><span class="token punctuation">></span></span> 1分钟检查一次操作次数<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>description</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span> <span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="NameNode故障处理"><a href="#NameNode故障处理" class="headerlink" title="NameNode故障处理"></a>NameNode故障处理</h3><p>NameNode故障后，可以采用如下两种方法恢复数据。</p>
+<h4 id="方法一：将-SecondaryNameNode-中数据拷贝到-NameNode-中进行数据备份或恢复；"><a href="#方法一：将-SecondaryNameNode-中数据拷贝到-NameNode-中进行数据备份或恢复；" class="headerlink" title="方法一：将 SecondaryNameNode 中数据拷贝到 NameNode 中进行数据备份或恢复；"></a>方法一：将 SecondaryNameNode 中数据拷贝到 NameNode 中进行数据备份或恢复；</h4><ol>
+<li><p>kill -9 NameNode进程号</p>
+</li>
+<li><p>删除NameNode存储的数据（/opt/module/hadoop-2.7.2/data/tmp/dfs/name）</p>
+</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ rm -rf /opt/module/hadoop-2.7.2/data/tmp/dfs/name/*<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>拷贝SecondaryNameNode中数据到原NameNode存储数据目录</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 dfs]$ scp -r user_test@hadoop104:/opt/module/hadoop-2.7.2/data/tmp/dfs/namesecondary/* ./name/<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="4">
+<li>重新启动NameNode</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[atguigu@hadoop102 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="方法二：使用-importCheckpoint-选项启动-NameNode-守护进程，从而将-SecondaryNameNode-中数据拷贝到-NameNode-目录中。"><a href="#方法二：使用-importCheckpoint-选项启动-NameNode-守护进程，从而将-SecondaryNameNode-中数据拷贝到-NameNode-目录中。" class="headerlink" title="方法二：使用 -importCheckpoint 选项启动 NameNode 守护进程，从而将 SecondaryNameNode 中数据拷贝到 NameNode 目录中。"></a>方法二：使用 -importCheckpoint 选项启动 NameNode 守护进程，从而将 SecondaryNameNode 中数据拷贝到 NameNode 目录中。</h4><ol>
+<li>修改hdfs-site.xml中的（因为原来的3600秒时间太长了，所以改成120）</li>
+</ol>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.namenode.checkpoint.period<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>120<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.namenode.name.dir<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>/opt/module/hadoop-2.7.2/data/tmp/dfs/name<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ol start="2">
+<li><p>kill -9 NameNode 进程</p>
+</li>
+<li><p>删除NameNode存储的数据（/opt/module/hadoop-2.7.2/data/tmp/dfs/name）</p>
+</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ rm -rf /opt/module/hadoop-2.7.2/data/tmp/dfs/name/*<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="4">
+<li>如果 SecondaryNameNode 不和 NameNode 在一个主机节点上，需要将 SecondaryNameNode 存储数据的目录拷贝到 NameNode 存储数据的平级目录，并删除 in_use.lock 文件</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 dfs]$ scp -r user_test@hadoop104:/opt/module/hadoop-2.7.2/data/tmp/dfs/namesecondary ./
+
+[user_test@hadoop102 namesecondary]$ rm -rf in_use.lock
+
+[user_test@hadoop102 dfs]$ pwd
+/opt/module/hadoop-2.7.2/data/tmp/dfs
+
+[user_test@hadoop102 dfs]$ ls
+data  name  namesecondary<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ol start="5">
+<li>导入检查点数据（等待一会ctrl+c结束掉）</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ bin/hdfs namenode -importCheckpoint<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="6">
+<li>启动NameNode</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="集群安全模式"><a href="#集群安全模式" class="headerlink" title="集群安全模式"></a>集群安全模式</h3><ol>
+<li>概述</li>
+</ol>
+<p><img src="4.png" alt></p>
+<ol start="2">
+<li>基本语法</li>
+</ol>
+<p>集群处于安全模式，不能执行重要操作（写操作）。集群启动完成后，自动退出安全模式。</p>
+<pre class="line-numbers language-shell"><code class="language-shell">    （1）bin/hdfs dfsadmin -safemode get        （查看安全模式状态）
+    （2）bin/hdfs dfsadmin -safemode enter      （进入安全模式状态）
+    （3）bin/hdfs dfsadmin -safemode leave    （离开安全模式状态）
+    （4）bin/hdfs dfsadmin -safemode wait        （等待安全模式状态）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ol start="3">
+<li>案例</li>
+</ol>
+<p>模拟等待安全模式（在安全模式时间内，来了任务，需要让其等待安全模式结束，然后立即执行。比如：银行对账时，在凌晨进行，在对账这个过程中，是不允许进行任何交易的，因此需要等待对账结束，然后）</p>
+<p>（1）查看当前模式</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -safemode get
+——>
+Safe mode is OFF<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（2）先进入安全模式</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ bin/hdfs dfsadmin -safemode enter
+——>
+Safe mode is ON<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>上传文件进行测试</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ bin/hdfs dfs -put sc.txt /loadFile/
+——>
+put: Cannot create file/loadFile/sc.txt._COPYING_. Name node is in safe mode.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（3）创建并执行下面的脚本</p>
+<p>在/opt/module/hadoop-2.7.2路径上，创建一个脚本safemode.sh</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ touch safemode.sh
+[user_test@hadoop102 hadoop-2.7.2]$ vim safemode.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>输入内容</p>
+<pre class="line-numbers language-xml"><code class="language-xml">#!/bin/bash
+hdfs dfsadmin -safemode wait
+hdfs dfs -put /opt/module/hadoop-2.7.2/README.txt /<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ chmod 777 safemode.sh
+
+[user_test@hadoop102 hadoop-2.7.2]$ bash safemode.sh <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（4）再打开一个窗口，执行</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ bin/hdfs dfsadmin -safemode leave<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（5）观察</p>
+<p>（a）再观察上一个窗口</p>
+<p>Safe mode is OFF</p>
+<p>（b）HDFS集群上已经有上传的数据了。</p>
+<h3 id="NameNode多目录配置"><a href="#NameNode多目录配置" class="headerlink" title="NameNode多目录配置"></a>NameNode多目录配置</h3><ol>
+<li><p>NameNode的本地目录可以配置成多个，且每个目录存放内容相同，增加了可靠性</p>
+</li>
+<li><p>具体配置如下</p>
+</li>
+</ol>
+<p>（1）在hdfs-site.xml文件中增加如下内容</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.namenode.name.dir<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>file:///${hadoop.tmp.dir}/dfs/name1,file:///${hadoop.tmp.dir}/dfs/name2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（2）停止集群，删除data和logs中所有数据。</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ rm -rf data/ logs/
+[user_test@hadoop103 hadoop-2.7.2]$ rm -rf data/ logs/
+[user_test@hadoop104 hadoop-2.7.2]$ rm -rf data/ logs/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（3）格式化集群并启动。</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ bin/hdfs namenode –format
+[user_test@hadoop102 hadoop-2.7.2]$ sbin/start-dfs.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（4）查看结果</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 dfs]$ ll
+——>
+总用量 12
+drwx------. 3 user_test user_test 4096 12月 11 08:03 data
+drwxrwxr-x. 3 user_test user_test 4096 12月 11 08:03 name1
+drwxrwxr-x. 3 user_test user_test 4096 12月 11 08:03 name2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="DataNode（面试开发重点）"><a href="#DataNode（面试开发重点）" class="headerlink" title="DataNode（面试开发重点）"></a>DataNode（面试开发重点）</h2><h3 id="DataNode工作机制"><a href="#DataNode工作机制" class="headerlink" title="DataNode工作机制"></a>DataNode工作机制</h3><p><img src="1.png" alt></p>
+<p>一个数据块在DataNode上以文件形式存储在磁盘上，包括两个文件，一个是数据本身，一个是元数据包括数据块的长度，块数据的校验和，以及时间戳。</p>
+<p>1）DataNode启动后向NameNode注册，通过后，周期性（1小时）的向NameNode上报所有的块信息。</p>
+<p>2）心跳是每3秒一次，心跳返回结果带有NameNode给该DataNode的命令（如复制块数据到另一台机器，或删除某个数据块）。如果超过10分钟没有收到某个DataNode的心跳，则认为该节点不可用。</p>
+<p>3）集群运行中可以安全加入和退出一些机器。</p>
+<h3 id="数据完整性"><a href="#数据完整性" class="headerlink" title="数据完整性"></a>数据完整性</h3><p><strong>思考：如果电脑磁盘里面存储的数据是控制高铁信号灯的红灯信号（1）和绿灯信号（0），但是存储该数据的磁盘坏了，一直显示是绿灯，是否很危险？同理DataNode节点上的数据损坏了，却没有发现，是否也很危险，那么如何解决呢？</strong></p>
+<p>如下是DataNode节点保证数据完整性的方法。</p>
+<p>1）当DataNode读取Block的时候，它会计算CheckSum。</p>
+<p>2）如果计算后的CheckSum，与Block创建时值不一样，说明Block已经损坏。</p>
+<p>3）Client读取其他DataNode上的Block。</p>
+<p>4）DataNode在其文件创建后周期验证CheckSum，如图：</p>
+<p><img src="2.png" alt></p>
+<h3 id="掉线时限参数设置"><a href="#掉线时限参数设置" class="headerlink" title="掉线时限参数设置"></a>掉线时限参数设置</h3><p><img src="4.png" alt></p>
+<p>需要注意的是hdfs-site.xml 配置文件中的 heartbeat.recheck.interval 的单位为毫秒，dfs.heartbeat.interval 的单位为秒。</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.namenode.heartbeat.recheck-interval<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>300000<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.heartbeat.interval<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="服役新数据节点"><a href="#服役新数据节点" class="headerlink" title="服役新数据节点"></a>服役新数据节点</h3><ol start="0">
+<li><p>需求<br>随着公司业务的增长，数据量越来越大，原有的数据节点的容量已经不能满足存储数据的需求，需要在原有集群基础上动态添加新的数据节点。</p>
+</li>
+<li><p>环境准备</p>
+</li>
+</ol>
+<p>（1）在hadoop104主机上再克隆一台hadoop105主机</p>
+<p>（2）修改IP地址和主机名称</p>
+<p>（3）删除原来HDFS文件系统留存的文件（/opt/module/hadoop-2.7.2/data和log）</p>
+<p>（4）source一下配置文件</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop105 hadoop-2.7.2]$ source /etc/profile<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li>服役新节点具体步骤</li>
+</ol>
+<p>（1）直接启动DataNode，即可关联到集群</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop105 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start datanode
+
+[user_test@hadoop105 hadoop-2.7.2]$ sbin/yarn-daemon.sh start nodemanager<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><img src="5.png" alt></p>
+<p>（2）在hadoop105上上传文件</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop105 hadoop-2.7.2]$ hadoop fs -put /opt/module/hadoop-2.7.2/LICENSE.txt /<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（3）如果数据不均衡，可以用命令实现集群的再平衡</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 sbin]$ ./start-balancer.sh
+——>
+starting balancer, logging to /opt/module/hadoop-2.7.2/logs/hadoop-atguigu-balancer-hadoop102.out
+Time Stamp               Iteration#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="退役旧数据节点"><a href="#退役旧数据节点" class="headerlink" title="退役旧数据节点"></a>退役旧数据节点</h3><h4 id="添加白名单"><a href="#添加白名单" class="headerlink" title="添加白名单"></a>添加白名单</h4><p>添加到白名单的主机节点，都允许访问NameNode，不在白名单的主机节点，都会被退出。</p>
+<p>配置白名单的具体步骤如下：</p>
+<p>（1）在NameNode的/opt/module/hadoop-2.7.2/etc/hadoop目录下创建dfs.hosts文件，添加以下内容</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop]$ pwd
+——>
+/opt/module/hadoop-2.7.2/etc/hadoop
+
+[user_test@hadoop102 hadoop]$ touch dfs.hosts
+
+[user_test@hadoop102 hadoop]$ vi dfs.hosts<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>添加如下主机名称（不添加hadoop105）<br>hadoop102<br>hadoop103<br>hadoop104</p>
+<p>（2）在NameNode的hdfs-site.xml配置文件中增加dfs.hosts属性</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.hosts<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>/opt/module/hadoop-2.7.2/etc/hadoop/dfs.hosts<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>（3）配置文件分发</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop]$ xsync hdfs-site.xml<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（4）刷新NameNode</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -refreshNodes
+——>
+Refresh nodes successful<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（5）更新ResourceManager节点</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop103 hadoop-2.7.2]$ yarn rmadmin -refreshNodes
+——>
+17/06/24 14:17:11 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.1.103:8033<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>（6）在web浏览器上查看</p>
+<p><img src="6.png" alt></p>
+<ol start="4">
+<li>如果数据不均衡，可以用命令实现集群的再平衡</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 sbin]$ ./start-balancer.sh
+——>
+starting balancer, logging to /opt/module/hadoop-2.7.2/logs/hadoop-atguigu-balancer-hadoop102.out
+Time Stamp               Iteration#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="黑名单退役"><a href="#黑名单退役" class="headerlink" title="黑名单退役"></a>黑名单退役</h4><p><strong>在做以下操作时，要注意退回到上一节操作之前状态</strong></p>
+<p>在黑名单上面的主机都会被强制退出。</p>
+<p>1.在NameNode的/opt/module/hadoop-2.7.2/etc/hadoop目录下创建dfs.hosts.exclude文件</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop]$ pwd
+/opt/module/hadoop-2.7.2/etc/hadoop
+[user_test@hadoop102 hadoop]$ touch dfs.hosts.exclude
+[user_test@hadoop102 hadoop]$ vi dfs.hosts.exclude<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>添加如下主机名称（要退役的节点）<br>hadoop105</p>
+<p>2．在NameNode的hdfs-site.xml配置文件中增加dfs.hosts.exclude属性</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.hosts.exclude<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>/opt/module/hadoop-2.7.2/etc/hadoop/dfs.hosts.exclude<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3．刷新NameNode、刷新ResourceManager</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -refreshNodes
+——>
+Refresh nodes successful
+
+[user_test@hadoop102 hadoop-2.7.2]$ yarn rmadmin -refreshNodes
+——>
+17/06/24 14:55:56 INFO client.RMProxy: Connecting to ResourceManager at hadoop103/192.168.1.103:8033<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ol start="4">
+<li>检查Web浏览器，退役节点的状态为decommission in progress（退役中），说明数据节点正在复制块到其他节点，如图:</li>
+</ol>
+<p><img src="7.png" alt></p>
+<ol start="5">
+<li>等待退役节点状态为decommissioned（所有块已经复制完成），停止该节点及节点资源管理器。注意：如果副本数是3，服役的节点小于等于3，是不能退役成功的，需要修改副本数后才能退役，如图:</li>
+</ol>
+<p><img src="8.png" alt></p>
+<p>可以看到hadoop105仍然还在页面上，但是里面Last contact是随着时间推移而增大的。这就表示上次连接时间与现在的间隔。</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop105 hadoop-2.7.2]$ sbin/hadoop-daemon.sh stop datanode
+——>
+stopping datanode
+
+[user_test@hadoop105 hadoop-2.7.2]$ sbin/yarn-daemon.sh stop nodemanager
+——>
+stopping nodemanager<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ol start="6">
+<li>如果数据不均衡，可以用命令实现集群的再平衡</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ sbin/start-balancer.sh 
+——>
+starting balancer, logging to /opt/module/hadoop-2.7.2/logs/hadoop-atguigu-balancer-hadoop102.out
+Time Stamp               Iteration#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>注意：不允许白名单和黑名单中同时出现同一个主机名称。</strong></p>
+<h3 id="Datanode多目录配置"><a href="#Datanode多目录配置" class="headerlink" title="Datanode多目录配置"></a>Datanode多目录配置</h3><ol>
+<li>DataNode也可以配置成多个目录，每个目录存储的数据不一样。即：数据不是副本</li>
+</ol>
+<p>2．具体配置如下</p>
+<p>hdfs-site.xml</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>dfs.datanode.data.dir<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>file:///${hadoop.tmp.dir}/dfs/data1,file:///${hadoop.tmp.dir}/dfs/data2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="HDFS-2-X新特性"><a href="#HDFS-2-X新特性" class="headerlink" title="HDFS 2.X新特性"></a>HDFS 2.X新特性</h2><h3 id="集群间数据拷贝"><a href="#集群间数据拷贝" class="headerlink" title="集群间数据拷贝"></a>集群间数据拷贝</h3><p>1．scp实现两个远程主机之间的文件复制</p>
+<pre class="line-numbers language-shell"><code class="language-shell">scp -r hello.txt root@hadoop103:/user/atguigu/hello.txt        // 推 push
+
+scp -r root@hadoop103:/user/atguigu/hello.txt  hello.txt        // 拉 pull
+
+scp -r root@hadoop103:/user/atguigu/hello.txt root@hadoop104:/user/atguigu   //是通过本地主机中转实现两个远程主机的文件复制；如果在两个远程主机之间ssh没有配置的情况下可以使用该方式。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>2．采用distcp命令实现两个Hadoop集群之间的递归数据复制</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$  bin/hadoop distcp
+hdfs://haoop102:9000/user/atguigu/hello.txt hdfs://hadoop103:9000/user/atguigu/hello.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>其中第一个地址为文件源地址，第二个为文件目的地址</p>
+<h3 id="小文件存档"><a href="#小文件存档" class="headerlink" title="小文件存档"></a>小文件存档</h3><p><img src="1.png" alt></p>
+<p>HAR文件就是HDFS归档文件，只是文件形式是这个。</p>
+<p>3．案例实操</p>
+<p>（1）需要启动YARN进程</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop103 hadoop-2.7.2]$ sbin/start-yarn.sh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（2）归档文件</p>
+<p>把/user/test/input目录里面的所有文件归档成一个叫input.har的归档文件，并把归档后文件存储到/user/test/output路径下。（以上几个路径都得自己新建来测试）</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ bin/hadoop archive -archiveName input.har –p  /user/atguigu/input   /user/atguigu/output<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其中 input.har 为要生成的har文件；-p后面第一个地址是源地址，第二个地址为将要生成存储的地址</p>
+<p>（3）查看归档</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -lsr /user/atguigu/output/input.har
+[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -lsr har:///user/atguigu/output/input.har<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>第二个就会看到其中内容</p>
+<p>（4）解归档文件</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -cp har:/// user/test/output/input.har/*    /user/test<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="回收站"><a href="#回收站" class="headerlink" title="回收站"></a>回收站</h3><p>开启回收站功能，可以将删除的文件在不超时的情况下，恢复原数据，起到防止误删除、备份等作用。</p>
+<p>1．回收站参数设置及工作机制</p>
+<p><img src="2.png" alt></p>
+<p>其中两个参数单位都是分钟</p>
+<p>2．启用回收站</p>
+<p>修改core-site.xml，配置垃圾回收时间为1分钟。</p>
+<pre class="line-numbers language-shell"><code class="language-shell"><property>
+    <name>fs.trash.interval</name>
+    <value>1</value>
+</property><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3．查看回收站</p>
+<p>回收站在集群中的路径：/user/atguigu/.Trash/….</p>
+<p>这样会说权限不够，因此需要下一步来配置权限</p>
+<p>4．修改访问垃圾回收站用户名称</p>
+<p>进入垃圾回收站用户名称，默认是dr.who，修改为user_test用户</p>
+<p>[core-site.xml]</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>hadoop.http.staticuser.user<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>value</span><span class="token punctuation">></span></span>user_test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>value</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>property</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ol start="5">
+<li>通过程序删除的文件不会经过回收站，需要调用moveToTrash()才进入回收站</li>
+</ol>
+<p>Trash trash = New Trash(conf);<br>trash.moveToTrash(path);</p>
+<ol start="5">
+<li>恢复回收站数据</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -mv
+/user/user_test/.Trash/Current/user/test/input    /user/test/input<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ol start="6">
+<li>清空回收站</li>
+</ol>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hadoop fs -expunge<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>并不是跟windows一样全部清空，二十重新打一个包，放起来。</p>
+<h3 id="快照管理"><a href="#快照管理" class="headerlink" title="快照管理"></a>快照管理</h3><p><img src="3.png" alt></p>
+<p>禁用快照功能的时候，要先删除已有快照</p>
+<p>2．案例实操</p>
+<p>（1）开启/禁用指定目录的快照功能</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -allowSnapshot /user/test/input
+[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -disallowSnapshot /user/test/input<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>（2）对目录创建快照</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfs -createSnapshot /user/test/input
+——>
+Created snapshot /user/test/input/.snapshot/s20200903-165659.207
+
+[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfs -lsr /user/test/input/.snapshot/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>快照放在一个隐藏文件之中</p>
+<p><img src="4.png" alt></p>
+<p>（3）指定名称创建快照</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfs -createSnapshot /user/atguigu/input  scSnapshot<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（4）重命名快照</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfs -renameSnapshot /user/atguigu/input/  scSnapshot sc20200903<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（5）列出当前用户所有可快照目录</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs lsSnapshottableDir<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>（6）比较两个快照目录的不同之处</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs snapshotDiff
+ /user/test/input/  .  .snapshot/sc20200903    
+——>
+Difference between current directory and snapshot s20200903-165659.207 under directory /user/test/input:
+M       .
+-       ./README.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>- ./README.txt </code></pre><p>这句就表示了，现有快照比现在文件少了一个 readme.txt 文件</p>
+<p>（7）恢复快照</p>
+<pre class="line-numbers language-shell"><code class="language-shell">[user_test@hadoop102 hadoop-2.7.2]$ hdfs dfs -cp
+/user/atguigu/input/.snapshot/s20170708-134303.027 /user<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+            </div>
+            <hr />
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">假装会有人打赏:)</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        <p class="reprint-tip">
+            <i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;
+            <span>转载规则</span>
+        </p>
+        
+            <div class="center-align">
+                <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
+                    <img alt=""
+                         style="border-width:0"
+                         src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
+                </a>
+            </div>
+            <br/>
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
+                  property="dct:title" rel="dct:type">
+                    《Hadoop-HDFS完整版笔记》
+                </span> 由
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2020/09/03/hadoop-hdfs-wan-zheng-ban-bi-ji/" property="cc:attributionName"
+               rel="cc:attributionURL">
+                文超
+            </a> 采用
+            <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
+                知识共享署名 4.0 国际许可协议
+            </a>进行许可。
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+        </div>
+    </div>
+
+    
+    <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: '526c72c4768212d8fb58',
+        clientSecret: 'efb518d7a883110ad3345e3f0bd717d77e53856c',
+        repo: 'Swenchao.github.io',
+        owner: 'Swenchao',
+        admin: "Swenchao",
+        id: '2020/09/03/hadoop-hdfs-wan-zheng-ban-bi-ji/',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+    
+
+    
+
+    
+
+    
+
+    
+    <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<!-- <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script> -->
+
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: '',
+        appKey: '',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'false' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '如果你没有GitHub账号，还可以在这里评论呢'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/09/06/hadoop-mapreduce-wan-zheng-ban-bi-ji/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Hadoop-MapReduce-完整版笔记">
+                        
+                        <span class="card-title">Hadoop-MapReduce-完整版笔记</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Hadoop-MapReduce完整版笔记
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-06
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/大数据/" class="post-category" target="_blank">
+                                    大数据
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Hadoop-MapReduce/" target="_blank">
+                        <span class="chip bg-color">Hadoop-MapReduce</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/09/03/hadoop-hdfs-hdfs2-x-xin-te-xing-xi-lie-shi-san/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="Hadoop-HDFS-HDFS2.X新特性（系列十三）">
+                        
+                        <span class="card-title">Hadoop-HDFS-HDFS2.X新特性（系列十三）</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            HDFS2.X新特性
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-09-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/大数据/" class="post-category" target="_blank">
+                                    大数据
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Hadoop-HDFS/" target="_blank">
+                        <span class="chip bg-color">Hadoop-HDFS</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: BJUT-Swenchao<br />'
+            + '作者: 文超<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () { bodyElement.removeChild(newdiv); }, 200);
+    });
+</script>
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2019 Wenchao. All Rights Reserved.
+
+            
+            &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+            <span class="white-color">187.4k</span>
+            
+
+            <br>
+            <span id="sitetime"></span>
+
+            
+            
+            <br>
+            
+            
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/Swenchao" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:scwrite678@outlook.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+    <a href="https://user.qzone.qq.com/707708540" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+    $(document).ready(function () {
+
+        var int = setInterval(fixCount, 50);
+        var pvcountOffset = 80000;
+        var uvcountOffset = 20000;
+
+        function fixCount() {
+            if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + pvcountOffset);
+                clearInterval(int);
+            }
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + uvcountOffset); // 加上初始数据 
+                clearInterval(int);
+            }
+        }
+    });
+</script>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+        var t1 = Date.UTC(2020, 02, 18, 00, 00, 00); //北京时间2018-2-13 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <script type="text/javascript"> var OriginTitile = document.title, st; document.addEventListener("visibilitychange", function () { document.hidden ? (document.title = "Σ(っ °Д °;)っ喔哟，崩溃啦！", clearTimeout(st)) : (document.title = "φ(゜▽゜*)♪咦，又好了！", st = setTimeout(function () { document.title = OriginTitile }, 3e3)) })
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', '');
+</script>
+
+
+
+    
+    <script src="/libs/others/clicklove.js"></script>
+    
+
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    <!-- 雪花特效 -->
+    
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-shizuku"},"display":{"position":"left","width":200,"height":400},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+
+</html>
